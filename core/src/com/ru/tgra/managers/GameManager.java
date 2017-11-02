@@ -11,6 +11,7 @@ import com.ru.tgra.graphics.Camera;
 import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
 import com.ru.tgra.graphics.shapes.BoxGraphic;
+import com.ru.tgra.graphics.shapes.PlaneGraphic;
 import com.ru.tgra.graphics.shapes.SphereGraphic;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
@@ -52,6 +53,7 @@ public class GameManager {
 
 		BoxGraphic.create();
 		SphereGraphic.create();
+		PlaneGraphic.create();
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
@@ -190,7 +192,7 @@ public class GameManager {
 		ModelMatrix.main.addTranslation((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2);
 		ModelMatrix.main.addScale(Settings.GROUND_WIDTH*3, 1.0f, Settings.GROUND_HEIGHT*3);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube(shader, groundTexture1, null);
+		PlaneGraphic.drawSolidCube(shader, groundTexture1, null);
 		ModelMatrix.main.popMatrix();
 	}
 
