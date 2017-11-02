@@ -15,13 +15,14 @@ import com.ru.tgra.graphics.shapes.PlaneGraphic;
 import com.ru.tgra.graphics.shapes.SphereGraphic;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
+import com.ru.tgra.objects.Floor;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
 
 public class GameManager {
 
-	static Shader shader;
+	public static Shader shader;
 
 	private static float angle;
 
@@ -35,6 +36,8 @@ public class GameManager {
 	private static Texture tex;
 	private static Texture groundTexture1;
 	private static Texture alphaTex;
+	
+	private static Floor floor;
 	
 	Random rand = new Random();
 
@@ -79,6 +82,14 @@ public class GameManager {
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
+		floor = new Floor(
+				new Point3D((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2),
+				new Vector3D(Settings.GROUND_WIDTH*3, 1.0f, Settings.GROUND_HEIGHT*3),
+				new Vector3D(),
+				Color.GREEN,
+				groundTexture1
+		);
+		
 
 	}
 
@@ -122,8 +133,9 @@ public class GameManager {
 		
 		shader.setFogStart(Settings.FOG_START);
 		shader.setFogEnd(Settings.FOG_END);
-		shader.setFogColor(0.7f, 0.7f, 0.7f, 1.0f);	// clear color should be same as fog color
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		shader.setFogColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
+		// clear color should be same as fog color
+		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		// CAMERA STUFF END -------------------------------------------------------------
@@ -179,7 +191,8 @@ public class GameManager {
 		ModelMatrix.main.popMatrix();
 
 		drawPyramids();
-		drawGround();
+		//drawGround();
+		floor.draw();
 	}
 
 	
@@ -190,7 +203,7 @@ public class GameManager {
 		ModelMatrix.main.pushMatrix();
 		shader.setMaterialDiffuse(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.r, 1.0f);
 		shader.setMaterialSpecular(0, 0, 0, 1);
-		ModelMatrix.main.addTranslation((Settings.GROUND_WIDTH*3)/2 -10, -0.5f, (Settings.GROUND_HEIGHT*3)/2);
+		ModelMatrix.main.addTranslation((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2);
 		ModelMatrix.main.addScale(Settings.GROUND_WIDTH*3, 1.0f, Settings.GROUND_HEIGHT*3);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		PlaneGraphic.drawSolidCube(shader, groundTexture1, null);

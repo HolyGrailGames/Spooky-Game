@@ -12,6 +12,20 @@ public class Vector3D {
 		this.y = y;
 		this.z = z;
 	}
+	
+	public Vector3D(Vector3D v)
+	{
+		x = v.x;
+		y = v.y;
+		z = v.z;
+	}
+	
+	public Vector3D()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+	}
 
 	public void set(float x, float y, float z)
 	{
