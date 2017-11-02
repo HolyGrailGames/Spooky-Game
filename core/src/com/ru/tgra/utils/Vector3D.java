@@ -80,4 +80,8 @@ public class Vector3D {
 	{
 		return new Vector3D(P2.x-P1.x, P2.y-P1.y, P2.z-P1.z);
 	}
+	
+	public static Vector3D up() {
+		return new Vector3D(0,1,0);
+	}
 }

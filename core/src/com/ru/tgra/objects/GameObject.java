@@ -61,5 +61,5 @@ public abstract class GameObject {
 	 * METHODS THAT NEED TO BE IMPLEMENTED BY SUBCLASSES:
 	 */
 	public abstract void update(float deltaTime);
-	public abstract void draw();
+	public abstract void display();
 }

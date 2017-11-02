@@ -52,9 +52,9 @@ public class Floor extends GameObject {
 	}
 
 	@Override
-	public void draw() {
+	public void display() {
 		for (Tile tile : tiles) {
-			tile.draw();
+			tile.display();
 		}
 	}
 

@@ -22,7 +22,7 @@ public class Tile extends GameObject {
 	}
 
 	@Override
-	public void draw() {
+	public void display() {
 		ModelMatrix.main.pushMatrix();
 		GameManager.shader.setMaterialDiffuse(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.r, 1.0f);
 		GameManager.shader.setMaterialSpecular(0, 0, 0, 1);
