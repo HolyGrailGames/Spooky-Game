@@ -108,99 +108,76 @@ public class GameManager {
 		//Gdx.gl.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
 		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 
-		for(int viewNum = 0; viewNum < 2; viewNum++)
-		{
-			if(viewNum == 0)
-			{
-				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
-				Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
-				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 0.2f, 15.0f);
-				shader.setViewMatrix(cam.getViewMatrix());
-				shader.setProjectionMatrix(cam.getProjectionMatrix());
-				shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
+		
+		// CAMERA STUFF START -------------------------------------------------------------
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(Gdx.graphics.getHeight()), 0.2f, 15.0f);
+		shader.setViewMatrix(cam.getViewMatrix());
+		shader.setProjectionMatrix(cam.getProjectionMatrix());
+		shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
+		
+		
+		shader.setFogStart(0.0f);
+		shader.setFogEnd(15.0f);
+		shader.setFogColor(0.7f, 0.7f, 0.7f, 1.0f);	// clear color should be same as fog color
+		Gdx.gl.glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		// CAMERA STUFF END -------------------------------------------------------------
 				
-				
-				shader.setFogStart(0.0f);
-				shader.setFogEnd(15.0f);
-				shader.setFogColor(0.7f, 0.7f, 0.7f, 1.0f);	// clear color should be same as fog color
-				Gdx.gl.glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
-				
-				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-				
-			}
-			else
-			{
-				Gdx.gl.glViewport(Gdx.graphics.getWidth() / 2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
-				Gdx.gl.glScissor(Gdx.graphics.getWidth() / 2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
-				topCam.look(new Point3D(cam.eye.x, 20.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
-				//orthoCam.look(new Point3D(7.0f, 40.0f, -7.0f), new Point3D(7.0f, 0.0f, -7.0f), new Vector3D(0,0,-1));
-				topCam.perspectiveProjection(30.0f, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 3, 100);
-				shader.setViewMatrix(topCam.getViewMatrix());
-				shader.setProjectionMatrix(topCam.getProjectionMatrix());
-				shader.setEyePosition(topCam.eye.x, topCam.eye.y, topCam.eye.z, 1.0f);
-				
-				// We set the fog far away enough that our top down view isn't affected by it
-				shader.setFogStart(90.0f);
-				shader.setFogEnd(100.0f);
-				shader.setFogColor(0.0f, 0.0f, 0.0f, 1.0f);	// clear color should be same as fog color
-				Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-			}
-
-	
-			//BoxGraphic.drawOutlineCube();
-			//SphereGraphic.drawSolidSphere();
-			//SphereGraphic.drawOutlineSphere();
+		//BoxGraphic.drawOutlineCube();
+		//SphereGraphic.drawSolidSphere();
+		//SphereGraphic.drawOutlineSphere();
 
 
-			ModelMatrix.main.loadIdentityMatrix();
+		ModelMatrix.main.loadIdentityMatrix();
 
-			//ModelMatrix.main.addRotationZ(angle);
+		//ModelMatrix.main.addRotationZ(angle);
 
-			float s = (float)Math.sin((angle / 2.0) * Math.PI / 180.0);
-			float c = (float)Math.cos((angle / 2.0) * Math.PI / 180.0);
+		float s = (float)Math.sin((angle / 2.0) * Math.PI / 180.0);
+		float c = (float)Math.cos((angle / 2.0) * Math.PI / 180.0);
 
-			//shader.setLightPosition(0.0f + c * 3.0f, 5.0f, 0.0f + s * 3.0f, 1.0f);
-			//shader.setLightPosition(3.0f, 4.0f, 0.0f, 1.0f);
-			shader.setLightPosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
+		//shader.setLightPosition(0.0f + c * 3.0f, 5.0f, 0.0f + s * 3.0f, 1.0f);
+		//shader.setLightPosition(3.0f, 4.0f, 0.0f, 1.0f);
+		shader.setLightPosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
 
 
-			float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
-			float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
+		float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
+		float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
 
-			shader.setSpotDirection(s2, -0.3f, c2, 0.0f);
-			//shader.setSpotDirection(-cam.n.x, -cam.n.y, -cam.n.z, 0.0f);
-			shader.setSpotExponent(0.0f);
-			shader.setConstantAttenuation(1.0f);
-			shader.setLinearAttenuation(0.00f);
-			shader.setQuadraticAttenuation(0.00f);
+		shader.setSpotDirection(s2, -0.3f, c2, 0.0f);
+		//shader.setSpotDirection(-cam.n.x, -cam.n.y, -cam.n.z, 0.0f);
+		shader.setSpotExponent(0.0f);
+		shader.setConstantAttenuation(1.0f);
+		shader.setLinearAttenuation(0.00f);
+		shader.setQuadraticAttenuation(0.00f);
 
-			//shader.setLightColor(s2, 0.4f, c2, 1.0f);
-			shader.setLightColor(1.0f, 1.0f, 1.0f, 1.0f);
-			
-			shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
+		//shader.setLightColor(s2, 0.4f, c2, 1.0f);
+		shader.setLightColor(1.0f, 1.0f, 1.0f, 1.0f);
+		
+		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 
-			//shader.setMaterialDiffuse(s, 0.4f, c, 1.0f);
-			shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-			//shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
-			shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
-			shader.setMaterialEmission(0, 0, 0, 1);
-			shader.setShininess(50.0f);
+		//shader.setMaterialDiffuse(s, 0.4f, c, 1.0f);
+		shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		//shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
+		shader.setMaterialEmission(0, 0, 0, 1);
+		shader.setShininess(50.0f);
 
-			ModelMatrix.main.pushMatrix();
-			ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
-			//ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
-			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		ModelMatrix.main.pushMatrix();
+		ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
+		//ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
-			//BoxGraphic.drawSolidCube(shader, tex, null);
-			//SphereGraphic.drawSolidSphere(shader, tex, alphaTex);
-			model.draw(shader, tex);
+		//BoxGraphic.drawSolidCube(shader, tex, null);
+		//SphereGraphic.drawSolidSphere(shader, tex, alphaTex);
+		model.draw(shader, tex);
 
-			ModelMatrix.main.popMatrix();
-	
-			drawPyramids();
-			drawGround();
-		}
+		ModelMatrix.main.popMatrix();
+
+		drawPyramids();
+		drawGround();
 	}
 
 	
