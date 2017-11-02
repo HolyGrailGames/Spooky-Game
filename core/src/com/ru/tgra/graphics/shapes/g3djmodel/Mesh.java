@@ -4,7 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.Vector;
 
 import com.badlogic.gdx.utils.BufferUtils;
-import com.ru.tgra.graphics.Vector3D;
+import com.ru.tgra.utils.Vector3D;
 
 public class Mesh {
 	//public Vector<String> attributes;

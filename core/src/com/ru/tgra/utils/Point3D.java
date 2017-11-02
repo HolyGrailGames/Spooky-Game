@@ -1,4 +1,4 @@
-package com.ru.tgra.graphics;
+package com.ru.tgra.utils;
 
 public class Point3D {
 
@@ -26,6 +26,11 @@ public class Point3D {
 		y += v.y;
 		z += v.z;
 	}
+	
+	public Point3D subtract(Point3D p)
+	{
+		return new Point3D(x-p.x, y-p.y, z-p.z);
+	}
 
 	public void set(float x, float y, float z)
 	{
@@ -33,4 +38,6 @@ public class Point3D {
 		this.y = y;
 		this.z = z;
 	}
+	
+	
 }

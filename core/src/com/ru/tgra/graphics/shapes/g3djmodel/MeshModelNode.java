@@ -2,9 +2,9 @@ package com.ru.tgra.graphics.shapes.g3djmodel;
 
 import java.util.Vector;
 
-import com.ru.tgra.graphics.Point3D;
-import com.ru.tgra.graphics.Quaternion;
-import com.ru.tgra.graphics.Vector3D;
+import com.ru.tgra.utils.Point3D;
+import com.ru.tgra.utils.Quaternion;
+import com.ru.tgra.utils.Vector3D;
 
 public class MeshModelNode {
 	public String id;

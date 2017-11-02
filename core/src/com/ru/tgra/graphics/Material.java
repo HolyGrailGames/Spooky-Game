@@ -1,5 +1,7 @@
 package com.ru.tgra.graphics;
 
+import com.ru.tgra.utils.Color;
+
 public class Material {
 	public String id;
 	public Color ambient;

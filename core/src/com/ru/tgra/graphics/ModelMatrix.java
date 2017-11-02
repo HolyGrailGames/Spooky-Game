@@ -1,5 +1,8 @@
 package com.ru.tgra.graphics;
 
+import com.ru.tgra.utils.Point3D;
+import com.ru.tgra.utils.Vector3D;
+
 public class ModelMatrix extends Matrix {
 	
 	public static ModelMatrix main;
