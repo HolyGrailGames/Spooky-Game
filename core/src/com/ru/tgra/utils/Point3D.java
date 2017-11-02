@@ -39,5 +39,11 @@ public class Point3D {
 		this.z = z;
 	}
 	
+	public void translate(float dx, float dy, float dz) {
+		x += dx;
+		y += dy;
+		z += dz;
+	}
+	
 	
 }

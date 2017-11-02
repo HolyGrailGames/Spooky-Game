@@ -114,16 +114,16 @@ public class GameManager {
 		// CAMERA STUFF START -------------------------------------------------------------
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(Gdx.graphics.getHeight()), 0.2f, 15.0f);
+		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(Gdx.graphics.getHeight()), 0.2f, Settings.FOG_END);
 		shader.setViewMatrix(cam.getViewMatrix());
 		shader.setProjectionMatrix(cam.getProjectionMatrix());
 		shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
 		
 		
-		shader.setFogStart(0.0f);
-		shader.setFogEnd(15.0f);
+		shader.setFogStart(Settings.FOG_START);
+		shader.setFogEnd(Settings.FOG_END);
 		shader.setFogColor(0.7f, 0.7f, 0.7f, 1.0f);	// clear color should be same as fog color
-		Gdx.gl.glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		// CAMERA STUFF END -------------------------------------------------------------
@@ -189,7 +189,8 @@ public class GameManager {
 		// Draw the floor of the maze.
 		ModelMatrix.main.pushMatrix();
 		shader.setMaterialDiffuse(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.r, 1.0f);
-		ModelMatrix.main.addTranslation((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2);
+		shader.setMaterialSpecular(0, 0, 0, 1);
+		ModelMatrix.main.addTranslation((Settings.GROUND_WIDTH*3)/2 -10, -0.5f, (Settings.GROUND_HEIGHT*3)/2);
 		ModelMatrix.main.addScale(Settings.GROUND_WIDTH*3, 1.0f, Settings.GROUND_HEIGHT*3);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		PlaneGraphic.drawSolidCube(shader, groundTexture1, null);
