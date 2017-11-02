@@ -1,6 +1,5 @@
 package com.ru.tgra.game;
 
-
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -8,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -17,6 +17,7 @@ import com.ru.tgra.graphics.*;
 import com.ru.tgra.graphics.shapes.*;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
+import com.ru.tgra.utils.Settings;
 
 public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor {
 
@@ -32,6 +33,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 	MeshModel model;
 
 	private Texture tex;
+	private Texture groundTexture1;
 	private Texture alphaTex;
 	
 	Random rand = new Random();
@@ -48,6 +50,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
 		alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
+		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 
 		model = G3DJModelLoader.loadG3DJFromFile("testModel.g3dj", true);
 
@@ -234,6 +237,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 			ModelMatrix.main.popMatrix();
 	
 			drawPyramids();
+			drawGround();
 		}
 	}
 
@@ -245,6 +249,18 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 		update();
 		display();
 
+	}
+	
+	private void drawGround()
+	{
+		// Draw the floor of the maze.
+		ModelMatrix.main.pushMatrix();
+		shader.setMaterialDiffuse(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.r, 1.0f);
+		ModelMatrix.main.addTranslation((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2);
+		ModelMatrix.main.addScale(Settings.GROUND_WIDTH*3, 1.0f, Settings.GROUND_HEIGHT*3);
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		BoxGraphic.drawSolidCube(shader, groundTexture1, null);
+		ModelMatrix.main.popMatrix();
 	}
 
 	private void drawPyramids()
