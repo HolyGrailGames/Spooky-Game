@@ -43,7 +43,8 @@ public class G3DJModelLoader {
 				if(attributes[attributeNum].equals("COLORPACKED")) { vertexFill += 1; }
 				if(attributes[attributeNum].equals("TANGENT")) { vertexFill += 3; }
 				if(attributes[attributeNum].equals("BINORMAL")) { vertexFill += 3; }
-				if(attributes[attributeNum].equals("TEXCOORD")) { vertexFill += 2; }
+				// substr first 8 chars
+				if(attributes[attributeNum].equals("TEXCOORD0")) { vertexFill += 2; }
 				if(attributes[attributeNum].equals("BLENDWEIGHT")) { vertexFill += 2; }
 			}
 
@@ -62,12 +63,21 @@ public class G3DJModelLoader {
 				for(int i = 0; i < 3; i++) {
 					mesh.normals.put(vertices[bufferIndex++]);
 				}
+				if (mesh.usesTexture == true) {
+					for (int i = 0; i < 2; i++) {
+						mesh.uvBuffer.put(vertices[bufferIndex++]);
+					}	
+				}
 				for(int i = 0; i < vertexFill; i++) {
 					bufferIndex++;
 				}
 			}
 			mesh.vertices.rewind();
 			mesh.normals.rewind();
+			if (mesh.usesTexture) {
+				mesh.uvBuffer.rewind();	
+			}
+			
 			//System.out.println(vertices.length);
 
 			Object[] parts = getObjectArray(meshDesc, "parts");
