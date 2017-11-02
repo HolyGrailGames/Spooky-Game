@@ -49,7 +49,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
 		alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
 
-		model = G3DJModelLoader.loadG3DJFromFile("testModel.g3dj", true);
+		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 
 		BoxGraphic.create();
 		SphereGraphic.create();
@@ -77,6 +77,8 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 		tex = new Texture(pm);*/
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		
+
 	}
 
 	private void input()
@@ -151,7 +153,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 	private void display()
 	{
 		//do all actual drawing and rendering here
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
@@ -166,20 +168,35 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 			if(viewNum == 0)
 			{
 				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
-				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 0.2f, 100.0f);
+				Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 0.2f, 15.0f);
 				shader.setViewMatrix(cam.getViewMatrix());
 				shader.setProjectionMatrix(cam.getProjectionMatrix());
 				shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
+				
+				shader.setFogStart(0.0f);
+				shader.setFogEnd(15.0f);
+				shader.setFogColor(0.7f, 0.7f, 0.7f, 1.0f);	// clear color should be same as fog color
+				Gdx.gl.glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 			}
 			else
 			{
 				Gdx.gl.glViewport(Gdx.graphics.getWidth() / 2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+				Gdx.gl.glScissor(Gdx.graphics.getWidth() / 2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
 				topCam.look(new Point3D(cam.eye.x, 20.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
 				//orthoCam.look(new Point3D(7.0f, 40.0f, -7.0f), new Point3D(7.0f, 0.0f, -7.0f), new Vector3D(0,0,-1));
 				topCam.perspectiveProjection(30.0f, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 3, 100);
 				shader.setViewMatrix(topCam.getViewMatrix());
 				shader.setProjectionMatrix(topCam.getProjectionMatrix());
 				shader.setEyePosition(topCam.eye.x, topCam.eye.y, topCam.eye.z, 1.0f);
+				
+				// We set the fog far away enough that our top down view isn't affected by it
+				shader.setFogStart(90.0f);
+				shader.setFogEnd(100.0f);
+				shader.setFogColor(0.0f, 0.0f, 0.0f, 1.0f);	// clear color should be same as fog color
+				Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 			}
 
 	
@@ -228,8 +245,8 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 			//BoxGraphic.drawSolidCube(shader, tex, null);
-			//SphereGraphic.drawSolidSphere(shader, tex, null);
-			model.draw(shader, tex);
+			SphereGraphic.drawSolidSphere(shader, tex, alphaTex);
+			//model.draw(shader, tex);
 
 			ModelMatrix.main.popMatrix();
 	
