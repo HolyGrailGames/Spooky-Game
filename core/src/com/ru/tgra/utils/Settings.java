@@ -6,8 +6,8 @@ public class Settings {
 	public static final float GROUND_HEIGHT = 25.0f;
 	
 	// MOVEMENT
-	public static final float MOUSE_SENSITIVITY = 10.0f;
-	public static final float WALK_SPEED = 10.0f;
+	public static final float MOUSE_SENSITIVITY = 7.0f;
+	public static final float WALK_SPEED = 5.0f;
 	
 	// FOG
 	public static final float FOG_START = 0.0f;
@@ -19,7 +19,7 @@ public class Settings {
 	public static final String VERTICAL = "VERTICAL";
 	
 	// CAMERA
-	public static float FOV = 90.0f;
+	public static float FOV = 55.0f;
 	
 
 	/**

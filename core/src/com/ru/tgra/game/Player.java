@@ -11,7 +11,7 @@ import com.ru.tgra.utils.Vector3D;
 public class Player {
 	
 	private Point3D position;
-	private Camera cam;
+	public Camera cam;
 
 	public Player(Point3D position, Vector3D direction) {
 		this.position = position;
@@ -28,11 +28,11 @@ public class Player {
 	}
 	
 	public void walkSideways(float dx, float dy, float dz) {
-		cam.slide(dx, dy, dz);
+		cam.slide(dx*Settings.WALK_SPEED, dy*Settings.WALK_SPEED, dz*Settings.WALK_SPEED);
 	}
 	
 	public void walkForward(float deltaTime) {
-		cam.walkForward(deltaTime);
+		cam.walkForward(deltaTime*Settings.WALK_SPEED);
 	}
 	
 	public void lookUpDown(float angle) {

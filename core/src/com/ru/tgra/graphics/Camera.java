@@ -2,7 +2,6 @@ package com.ru.tgra.graphics;
 
 import java.nio.FloatBuffer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
@@ -67,9 +66,9 @@ public class Camera {
 
 	public void slide(float delU, float delV, float delN)
 	{
-		eye.x += delU*u.x*Settings.WALK_SPEED + delV*v.x*Settings.WALK_SPEED + delN*n.x*Settings.WALK_SPEED;
-		eye.y += delU*u.y*Settings.WALK_SPEED + delV*v.y*Settings.WALK_SPEED + delN*n.y*Settings.WALK_SPEED;
-		eye.z += delU*u.z*Settings.WALK_SPEED + delV*v.z*Settings.WALK_SPEED + delN*n.z*Settings.WALK_SPEED;
+		eye.x += delU*u.x + delV*v.x + delN*n.x;
+		eye.y += delU*u.y + delV*v.y + delN*n.y;
+		eye.z += delU*u.z + delV*v.z + delN*n.z;
 	}
 
 	public void roll(float angle)
@@ -111,9 +110,9 @@ public class Camera {
 		n_normalized.set(n.x, 0.0f, n.z);
 		n_normalized.normalize();
 		
-		eye.x -= del*n_normalized.x*Settings.WALK_SPEED;
+		eye.x -= del*n_normalized.x;
 		//eye.y += del*n.y;
-		eye.z -= del*n_normalized.z*Settings.WALK_SPEED;
+		eye.z -= del*n_normalized.z;
 	}
 
 	public void rotateY(float angle)
