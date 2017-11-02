@@ -1,4 +1,4 @@
-package com.ru.tgra.graphics;
+package com.ru.tgra.utils;
 
 public class Vector3D {
 

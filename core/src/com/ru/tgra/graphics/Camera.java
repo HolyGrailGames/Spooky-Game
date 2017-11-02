@@ -4,6 +4,9 @@ import java.nio.FloatBuffer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.ru.tgra.utils.Point3D;
+import com.ru.tgra.utils.Settings;
+import com.ru.tgra.utils.Vector3D;
 
 public class Camera {
 
@@ -11,6 +14,8 @@ public class Camera {
 	public Vector3D u;
 	public Vector3D v;
 	public Vector3D n;
+	
+	public Vector3D n_normalized;
 
 	boolean orthographic;
 
@@ -31,6 +36,8 @@ public class Camera {
 		u = new Vector3D(1,0,0);
 		v = new Vector3D(0,1,0);
 		n = new Vector3D(0,0,1);
+		
+		n_normalized = new Vector3D(n.x, 0.0f, n.z);
 
 		orthographic = true;
 
@@ -60,9 +67,9 @@ public class Camera {
 
 	public void slide(float delU, float delV, float delN)
 	{
-		eye.x += delU*u.x + delV*v.x + delN*n.x;
-		eye.y += delU*u.y + delV*v.y + delN*n.y;
-		eye.z += delU*u.z + delV*v.z + delN*n.z;
+		eye.x += delU*u.x*Settings.WALK_SPEED + delV*v.x*Settings.WALK_SPEED + delN*n.x*Settings.WALK_SPEED;
+		eye.y += delU*u.y*Settings.WALK_SPEED + delV*v.y*Settings.WALK_SPEED + delN*n.y*Settings.WALK_SPEED;
+		eye.z += delU*u.z*Settings.WALK_SPEED + delV*v.z*Settings.WALK_SPEED + delN*n.z*Settings.WALK_SPEED;
 	}
 
 	public void roll(float angle)
@@ -86,7 +93,6 @@ public class Camera {
 
 		u.set(t.x * c - n.x * s, t.y * c - n.y * s, t.z * c - n.z * s);
 		n.set(t.x * s + n.x * c, t.y * s + n.y * c, t.z * s + n.z * c);
-		
 	}
 
 	public void pitch(float angle)
@@ -98,14 +104,16 @@ public class Camera {
 
 		n.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
 		v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
-		
 	}
 
 	public void walkForward(float del)
 	{
-		eye.x -= del*n.x;
+		n_normalized.set(n.x, 0.0f, n.z);
+		n_normalized.normalize();
+		
+		eye.x -= del*n_normalized.x*Settings.WALK_SPEED;
 		//eye.y += del*n.y;
-		eye.z -= del*n.z;
+		eye.z -= del*n_normalized.z*Settings.WALK_SPEED;
 	}
 
 	public void rotateY(float angle)

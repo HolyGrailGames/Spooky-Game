@@ -1,47 +1,43 @@
-package com.ru.tgra.game;
+package com.ru.tgra.managers;
 
 import java.util.Random;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
-import com.ru.tgra.graphics.*;
-import com.ru.tgra.graphics.shapes.*;
+import com.ru.tgra.graphics.Camera;
+import com.ru.tgra.graphics.ModelMatrix;
+import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.graphics.shapes.BoxGraphic;
+import com.ru.tgra.graphics.shapes.SphereGraphic;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
+import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
+import com.ru.tgra.utils.Vector3D;
 
-public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor {
+public class GameManager {
 
-	Shader shader;
+	static Shader shader;
 
-	private float angle;
+	private static float angle;
 
-	private Camera cam;
-	private Camera topCam;
+	public static Camera cam;
+	private static Camera topCam;
 	
-	private float fov = 90.0f;
+	private static float fov = 90.0f;
 
-	MeshModel model;
+	static MeshModel model;
 
-	private Texture tex;
-	private Texture groundTexture1;
-	private Texture alphaTex;
+	private static Texture tex;
+	private static Texture groundTexture1;
+	private static Texture alphaTex;
 	
 	Random rand = new Random();
 
-	@Override
-	public void create () {
-
-		Gdx.input.setInputProcessor(this);
+	public static void create () {
 
 		DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
 		Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
@@ -52,7 +48,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 		alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 
-		model = G3DJModelLoader.loadG3DJFromFile("testModel.g3dj", true);
+		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 
 		BoxGraphic.create();
 		SphereGraphic.create();
@@ -80,81 +76,29 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 		tex = new Texture(pm);*/
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		
+
 	}
 
-	private void input()
+	public static void input()
 	{
 	}
 	
-	private void update()
+	public static void update()
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		angle += 180.0f * deltaTime;
 
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			cam.slide(-3.0f * deltaTime, 0, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			cam.slide(3.0f * deltaTime, 0, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			cam.slide(0, 0, -3.0f * deltaTime);
-			//cam.walkForward(3.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			cam.slide(0, 0, 3.0f * deltaTime);
-			//cam.walkForward(-3.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-			cam.slide(0, 3.0f * deltaTime, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-			cam.slide(0, -3.0f * deltaTime, 0);
-		}
-
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			cam.yaw(-90.0f * deltaTime);
-			//cam.rotateY(90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			cam.yaw(90.0f * deltaTime);
-			//cam.rotateY(-90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			cam.pitch(-90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			cam.pitch(90.0f * deltaTime);
-		}
-
-		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			cam.roll(-90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-			cam.roll(90.0f * deltaTime);
-		}
-
-		if(Gdx.input.isKeyPressed(Input.Keys.T)) {
-			fov -= 30.0f * deltaTime;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.G)) {
-			fov += 30.0f * deltaTime;
-		}
-
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-		{
-			Gdx.graphics.setDisplayMode(500, 500, false);
-			Gdx.app.exit();
-		}
+		InputManager.processInput(cam, deltaTime);
 
 		//do all updates to the game
 	}
 	
-	private void display()
+	public static void display()
 	{
 		//do all actual drawing and rendering here
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
@@ -169,20 +113,38 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 			if(viewNum == 0)
 			{
 				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
-				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 0.2f, 100.0f);
+				Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+				cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 0.2f, 15.0f);
 				shader.setViewMatrix(cam.getViewMatrix());
 				shader.setProjectionMatrix(cam.getProjectionMatrix());
 				shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
+				
+				
+				shader.setFogStart(0.0f);
+				shader.setFogEnd(15.0f);
+				shader.setFogColor(0.7f, 0.7f, 0.7f, 1.0f);	// clear color should be same as fog color
+				Gdx.gl.glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+				
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+				
 			}
 			else
 			{
 				Gdx.gl.glViewport(Gdx.graphics.getWidth() / 2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+				Gdx.gl.glScissor(Gdx.graphics.getWidth() / 2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
 				topCam.look(new Point3D(cam.eye.x, 20.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
 				//orthoCam.look(new Point3D(7.0f, 40.0f, -7.0f), new Point3D(7.0f, 0.0f, -7.0f), new Vector3D(0,0,-1));
 				topCam.perspectiveProjection(30.0f, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 3, 100);
 				shader.setViewMatrix(topCam.getViewMatrix());
 				shader.setProjectionMatrix(topCam.getProjectionMatrix());
 				shader.setEyePosition(topCam.eye.x, topCam.eye.y, topCam.eye.z, 1.0f);
+				
+				// We set the fog far away enough that our top down view isn't affected by it
+				shader.setFogStart(90.0f);
+				shader.setFogEnd(100.0f);
+				shader.setFogColor(0.0f, 0.0f, 0.0f, 1.0f);	// clear color should be same as fog color
+				Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 			}
 
 	
@@ -231,7 +193,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 			//BoxGraphic.drawSolidCube(shader, tex, null);
-			//SphereGraphic.drawSolidSphere(shader, tex, null);
+			//SphereGraphic.drawSolidSphere(shader, tex, alphaTex);
 			model.draw(shader, tex);
 
 			ModelMatrix.main.popMatrix();
@@ -241,17 +203,9 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 		}
 	}
 
-	@Override
-	public void render () {
-		
-		input();
-		//put the code inside the update and display methods, depending on the nature of the code
-		update();
-		display();
-
-	}
 	
-	private void drawGround()
+	
+	private static void drawGround()
 	{
 		// Draw the floor of the maze.
 		ModelMatrix.main.pushMatrix();
@@ -263,7 +217,7 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 		ModelMatrix.main.popMatrix();
 	}
 
-	private void drawPyramids()
+	private static void drawPyramids()
 	{
 		int maxLevel = 9;
 
@@ -322,46 +276,6 @@ public class LabMeshTexGame extends ApplicationAdapter implements InputProcessor
 			ModelMatrix.main.popMatrix();
 			ModelMatrix.main.popMatrix();
 		}
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
 	}
 
 
