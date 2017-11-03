@@ -60,10 +60,10 @@ public class SpriteGraphic {
 
 	}
 
-	public static void drawSolidCube(Shader shader, Texture emissionTexture, Texture alphaTexture) {
-		shader.clearTextures();
+	public static void drawSprite(Shader shader, Texture emissionTexture, Texture alphaTexture) {
 		shader.setEmissionTexture(emissionTexture);
 		shader.setAlphaTexture(alphaTexture);
+		shader.setDiffuseTexture(null);
 
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
@@ -71,5 +71,4 @@ public class SpriteGraphic {
 
 		Gdx.gl.glDrawElements(GL20.GL_TRIANGLE_FAN, 4, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
-
 }

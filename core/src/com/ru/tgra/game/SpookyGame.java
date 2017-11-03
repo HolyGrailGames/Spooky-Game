@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.graphics.*;
 import com.ru.tgra.graphics.shapes.*;
@@ -25,9 +26,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 	static MeshModel model;
 	
+	ParticleEffect particleEffect;
+	
 	private static Texture tex;
 	private static Texture groundTexture1;
-	//private static Texture alphaTex;
+	private static Texture alphaTex;
+	private static Texture flameTex;
 	
 	
 	public static Player player;
@@ -68,12 +72,16 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
-		//alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
+		alphaTex = new Texture(Gdx.files.internal("textures/flamealphatex.png"));
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
+
+		flameTex= new Texture(Gdx.files.internal("textures/flametex01.png"));
 		
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
+		
+		particleEffect = new ParticleEffect(new Point3D(5f, 2f, 5f), 30.0f, 3.0f, flameTex, alphaTex);
 
-		player = new Player(new Point3D(0f,2f,0f), new Vector3D(1,0,1));
+		player = new Player(new Point3D(10f, 2f, 10f), new Vector3D(1,0,1));
 		
 		floor = new Floor(
 				new Point3D((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2),
@@ -102,7 +110,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		angle += 180.0f * deltaTime;
-
+		particleEffect.update(deltaTime);
+		
 		//do all updates to the game
 	}
 	
@@ -110,9 +119,9 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	{
 		//do all actual drawing and rendering here
 		
-		shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setMaterialDiffuse(0.0f, 0.0f, 0.0f, 1.0f);
 		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
-		shader.setMaterialEmission(0, 0, 0, 1);
+		shader.setMaterialEmission(1.0f, 1.0f, 1.0f, 1.0f);
 		shader.setShininess(50.0f);
 		
 		// TODO: just have Global ambient lighting here
@@ -145,20 +154,18 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(10, 2, 2);
-		ModelMatrix.main.addScale(4, 4, 4);
+		ModelMatrix.main.addScale(4, 4, 4);	
 		
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		BoxGraphic.drawSolidCube(shader, null, null);
 		
 		ModelMatrix.main.popMatrix();
 		
+		
+		
 		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(2, 2, 10);
-		ModelMatrix.main.addScale(4, 4, 4);
-		
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube(shader, null, null);
-		
+		particleEffect.draw(shader);
 		ModelMatrix.main.popMatrix();
 		
 	}

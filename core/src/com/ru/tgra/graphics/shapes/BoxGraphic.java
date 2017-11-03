@@ -141,10 +141,9 @@ public class BoxGraphic {
 	}
 
 	public static void drawSolidCube(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
-		shader.clearTextures();
+		shader.setEmissionTexture(null);
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTexture);
-		shader.setEmissionTexture(null);
 
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
