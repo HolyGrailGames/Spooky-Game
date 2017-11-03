@@ -48,6 +48,12 @@ public class Vector3D {
 		z *= S;
 	}
 
+	public static Vector3D scale(Vector3D v, float S)
+	{
+		
+		return new Vector3D(v.x * S, v.y * S, v.z * S);
+	}
+	
 	public void add(Vector3D v2)
 	{
 		x += v2.x;

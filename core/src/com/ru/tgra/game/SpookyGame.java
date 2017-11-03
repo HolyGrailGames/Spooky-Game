@@ -27,6 +27,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 	static MeshModel model;
 	
+	ParticleEffect particleEffect;
+	
 	private static Texture tex;
 	private static Texture groundTexture1;
 	private static Texture alphaTex;
@@ -75,6 +77,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 		
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
+		
+		particleEffect = new ParticleEffect(new Point3D(5f, 2f, 5f), 30.0f, 3.0f, Particles.flameTex, alphaTex);
 
 		player = new Player(new Point3D(10f, 2f, 10f), new Vector3D(1,0,1));
 		
@@ -105,15 +109,14 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		angle += 180.0f * deltaTime;
-
+		particleEffect.update(deltaTime);
+		
 		//do all updates to the game
 	}
 	
 	private void display()
 	{
 		//do all actual drawing and rendering here
-		Gdx.gl.glDisable(GL20.GL_BLEND);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		
 		shader.setMaterialDiffuse(0.0f, 0.0f, 0.0f, 1.0f);
 		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
@@ -157,18 +160,11 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		ModelMatrix.main.popMatrix();
 		
+		
+		// Particle stuff happening, its cool!
 		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(2, 2, 10);
-		ModelMatrix.main.addScale(2, 2, 2);
-		
-
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		SpriteGraphic.drawSprite(shader, Particles.flameTex, alphaTex);
-		
-		
-		
+		particleEffect.draw(shader);
 		ModelMatrix.main.popMatrix();
 		
 	}
