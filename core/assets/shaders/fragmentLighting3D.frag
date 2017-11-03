@@ -60,8 +60,7 @@ void main()
 	}
 	else
 	{
-		materialEmission = texture2D(u_diffuseTexture, v_uv); // * u_materialEmission;  Also * u_materialEmission ??? up to you.
-		//materialEmission = u_materialEmission;
+		materialEmission = u_materialEmission;
 	}
 	
 	if(u_usesAlphaTexture == 1.0)
