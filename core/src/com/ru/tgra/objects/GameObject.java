@@ -2,6 +2,7 @@ package com.ru.tgra.objects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.ru.tgra.graphics.Shader;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Vector3D;
 
@@ -61,5 +62,5 @@ public abstract class GameObject {
 	 * METHODS THAT NEED TO BE IMPLEMENTED BY SUBCLASSES:
 	 */
 	public abstract void update(float deltaTime);
-	public abstract void display();
+	public abstract void display(Shader shader);
 }

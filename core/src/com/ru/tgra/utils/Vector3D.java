@@ -33,6 +33,13 @@ public class Vector3D {
 		this.y = y;
 		this.z = z;
 	}
+	
+	public void set(Vector3D v)
+	{
+		this.x = v.x;
+		this.y = v.y;
+		this.z = v.z;
+	}
 
 	public void scale(float S)
 	{

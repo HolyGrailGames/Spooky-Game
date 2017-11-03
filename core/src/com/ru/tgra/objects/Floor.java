@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.ru.tgra.graphics.Shader;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -52,9 +53,9 @@ public class Floor extends GameObject {
 	}
 
 	@Override
-	public void display() {
+	public void display(Shader shader) {
 		for (Tile tile : tiles) {
-			tile.display();
+			tile.display(shader);
 		}
 	}
 

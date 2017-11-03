@@ -7,19 +7,19 @@ public class Settings {
 	
 	// MOVEMENT
 	public static final float MOUSE_SENSITIVITY = 7.0f;
-	public static final float WALK_SPEED = 5.0f;
+	public static final float WALK_SPEED = 10.0f;
 	
 	// FOG
-	public static final float FOG_START = 0.0f;
+	public static final float FOG_START = -30.0f;
 	public static final float FOG_END = 60.0f;
-	public static final Color FOG_COLOR = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+	public static final Color FOG_COLOR = new Color(0.3f, 0.3f, 0.3f, 1.0f);
 	
 	public static final int SUBDIVISIONS = 6;
 	public static final String HORIZONTAL = "HORIZONTAL";
 	public static final String VERTICAL = "VERTICAL";
 	
 	// CAMERA
-	public static float FOV = 55.0f;
+	public static final float FOV = 55.0f;
 	
 
 	/**

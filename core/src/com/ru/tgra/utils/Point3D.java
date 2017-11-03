@@ -45,6 +45,13 @@ public class Point3D {
 		this.z = z;
 	}
 	
+	public void set(Point3D p)
+	{
+		this.x = p.x;
+		this.y = p.y;
+		this.z = p.z;
+	}
+	
 	public void translate(float dx, float dy, float dz) {
 		x += dx;
 		y += dy;

@@ -33,7 +33,7 @@ public class InputManager {
 			player.walkSideways(0, -deltaTime, 0);
 		}
 
-		
+		/*
 		// Zooming
 		if(Gdx.input.isKeyPressed(Input.Keys.T)) {
 			Settings.FOV -= 30.0f * deltaTime;
@@ -41,7 +41,8 @@ public class InputManager {
 		if(Gdx.input.isKeyPressed(Input.Keys.G)) {
 			Settings.FOV += 30.0f * deltaTime;
 		}
-
+		*/
+		
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
 		{
 			Gdx.graphics.setDisplayMode(500, 500, false);
@@ -49,7 +50,7 @@ public class InputManager {
 		}
 	}
 	
-	public static boolean mouseMoved(int screenX, int screenY) {
+	public static boolean mouseMoved(int screenX, int screenY, Player player) {
 		
 		if (lastMousePos == null) {
 			lastMousePos = new Point3D(screenX, screenY, 0.0f);
@@ -65,17 +66,17 @@ public class InputManager {
 		lastMousePos.set(currMousePos.x, currMousePos.y, currMousePos.z);
 		
 		if(dx < 0) {
-			GameManager.player.lookLeftRight(Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dx));
+			player.lookLeftRight(Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dx));
 		}
 		if(dx > 0) {
-			GameManager.player.lookLeftRight(-Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dx));
+			player.lookLeftRight(-Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dx));
 		}
 		
 		if(dy < 0) {
-			GameManager.player.lookUpDown(Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dy));
+			player.lookUpDown(Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dy));
 		}
 		if(dy > 0) {
-			GameManager.player.lookUpDown(-Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dy));
+			player.lookUpDown(-Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dy));
 		}
 		
 		return false;
