@@ -9,7 +9,6 @@ import com.ru.tgra.graphics.*;
 import com.ru.tgra.graphics.shapes.*;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
-import com.ru.tgra.managers.GameManager;
 import com.ru.tgra.managers.InputManager;
 import com.ru.tgra.objects.Floor;
 import com.ru.tgra.utils.Point3D;
@@ -39,8 +38,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCursorCatched(true);
 		
-		DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
-		Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
+		//DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
+		//Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
 
 		shader = new Shader();
 
@@ -118,9 +117,9 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		// TODO: just have Global ambient lighting here
 		
-		shader.setGlobalAmbient(0.6f, 0.6f, 0.6f, 1);
+		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 		
-		shader.setLightPosition(player.position.x, 0, player.position.z, 1.0f);
+		shader.setLightPosition(player.position.x, player.position.y, player.position.z, 1.0f);
 		shader.setSpotDirection(player.direction.x, player.direction.y, player.direction.z, 0.0f);
 		
 		shader.setSpotExponent(1.0f);

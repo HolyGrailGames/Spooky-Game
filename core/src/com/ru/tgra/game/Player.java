@@ -41,12 +41,12 @@ public class Player {
 	
 	public void lookUpDown(float angle) {
 		cam.pitch(angle);
-		direction.set(cam.v);
+		direction.set(-cam.n.x,-cam.n.y,-cam.n.z);
 	}
 	
 	public void lookLeftRight(float angle) {
 		cam.rotateY(angle);
-		direction.set(cam.v);
+		direction.set(-cam.n.x,-cam.n.y,-cam.n.z);
 	}
 	
 	private void displayCamera(Shader shader) {
@@ -67,9 +67,11 @@ public class Player {
 		shader.setProjectionMatrix(cam.getProjectionMatrix());
 		shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
 		
+		
 		shader.setFogStart(Settings.FOG_START);
 		shader.setFogEnd(Settings.FOG_END);
 		shader.setFogColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
+		
 		// clear color should be same as fog color
 		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 		
