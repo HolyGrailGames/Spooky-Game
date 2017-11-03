@@ -52,10 +52,10 @@ public class PlaneGraphic {
 		uvBuffer.rewind();
 
 		//INDEX ARRAY IS FILLED HERE
-		short[] indexArray = {0, 1, 2, 0, 2, 3};
+		short[] indexArray = {0, 1, 2, 3};
 
-		indexBuffer = BufferUtils.newShortBuffer(6);
-		BufferUtils.copy(indexArray, 0, indexBuffer, 6);
+		indexBuffer = BufferUtils.newShortBuffer(4);
+		BufferUtils.copy(indexArray, 0, indexBuffer, 4);
 		indexBuffer.rewind();
 	}
 
@@ -68,7 +68,7 @@ public class PlaneGraphic {
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
 
-		Gdx.gl.glDrawElements(GL20.GL_TRIANGLES, 36, GL20.GL_UNSIGNED_SHORT, indexBuffer);
+		Gdx.gl.glDrawElements(GL20.GL_TRIANGLE_FAN, 4, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 
 }
