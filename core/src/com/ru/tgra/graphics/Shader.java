@@ -163,6 +163,7 @@ public class Shader {
 			Gdx.gl.glUniform1i(emissionTextureLoc, 2);
 			Gdx.gl.glUniform1f(usesEmissionTexLoc, 1.0f);
 			usesEmissionTexture = true;
+			
 			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
 			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
 		}
@@ -283,12 +284,5 @@ public class Shader {
 	public void setFogColor(float x, float y, float z, float w)
 	{
 		Gdx.gl.glUniform4f(fogColorLoc, x, y, z, w);
-	}
-	
-	public void clearTextures()
-	{
-		setAlphaTexture(null);
-		setDiffuseTexture(null);
-		setEmissionTexture(null);
 	}
 }

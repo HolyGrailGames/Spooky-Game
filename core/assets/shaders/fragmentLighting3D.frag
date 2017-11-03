@@ -65,7 +65,7 @@ void main()
 	
 	if(u_usesAlphaTexture == 1.0)
 	{
-		materialDiffuse.a *= texture2D(u_alphaTexture, v_uv).r;
+		materialDiffuse.a = texture2D(u_alphaTexture, v_uv).r;
 	}
 	
 	materialDiffuse.a *= materialEmission.a;

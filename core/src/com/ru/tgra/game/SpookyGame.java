@@ -32,6 +32,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	private static Texture tex;
 	private static Texture groundTexture1;
 	private static Texture alphaTex;
+	private static Texture flameTex;
 	
 	
 	public static Player player;
@@ -52,7 +53,6 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		SphereGraphic.create();
 		PlaneGraphic.create();
 		SpriteGraphic.create();
-		Particles.create();
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
@@ -75,10 +75,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
 		alphaTex = new Texture(Gdx.files.internal("textures/flamealphatex.png"));
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
+
+		flameTex= new Texture(Gdx.files.internal("textures/flametex01.png"));
 		
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 		
-		particleEffect = new ParticleEffect(new Point3D(5f, 2f, 5f), 30.0f, 3.0f, Particles.flameTex, alphaTex);
+		particleEffect = new ParticleEffect(new Point3D(5f, 2f, 5f), 30.0f, 3.0f, flameTex, alphaTex);
 
 		player = new Player(new Point3D(10f, 2f, 10f), new Vector3D(1,0,1));
 		
@@ -161,7 +163,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		ModelMatrix.main.popMatrix();
 		
 		
-		// Particle stuff happening, its cool!
+		
 		ModelMatrix.main.pushMatrix();
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		particleEffect.draw(shader);

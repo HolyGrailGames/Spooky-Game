@@ -16,6 +16,14 @@ public class ParticleEffect
 	private Queue<Particle> particles;
 	private float leftOverTime;
 	private float particleInterval;
+	
+
+	float size;
+	float timeToLive;
+	float fadeInTime;
+	float fadeOutTime;
+	float maxAlpha;
+	
 	private int maxParticleCount;
 	
 	private Texture emissionTexture;
@@ -45,8 +53,8 @@ public class ParticleEffect
 		
 		 deltaTime += leftOverTime;
 		 while (deltaTime >= particleInterval) {
-			 Vector3D particleSpeed = new Vector3D(random.nextFloat(), random.nextFloat(), random.nextFloat());
-			 Particle particle = new Particle (new Point3D(position.x, position.y, position.z), particleSpeed, emissionTexture, alphaTexture);
+			 Vector3D particleSpeed = new Vector3D(random.nextFloat() - 0.5f, random.nextFloat() + 0.5f, random.nextFloat() - 0.5f);
+			 Particle particle = new Particle (new Point3D(position.x, position.y, position.z), particleSpeed, 0.2f, 1.0f, 0.1f, 0.4f, 0.4f, emissionTexture, alphaTexture);
 			 particle.update(deltaTime);
 			 particles.add(particle);
 			 
@@ -66,7 +74,6 @@ public class ParticleEffect
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 		
-		shader.setMaterialDiffuse(0,  0,  0,  0.15f);
 		
 		for (Particle particle : particles)
 		{

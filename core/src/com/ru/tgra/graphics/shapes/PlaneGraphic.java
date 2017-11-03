@@ -60,7 +60,7 @@ public class PlaneGraphic {
 	}
 
 	public static void drawSolidCube(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
-		shader.clearTextures();
+		shader.setEmissionTexture(null);
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTexture);
 		
