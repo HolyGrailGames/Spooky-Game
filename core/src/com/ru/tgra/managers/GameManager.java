@@ -11,6 +11,7 @@ import com.ru.tgra.graphics.Shader;
 import com.ru.tgra.graphics.shapes.BoxGraphic;
 import com.ru.tgra.graphics.shapes.PlaneGraphic;
 import com.ru.tgra.graphics.shapes.SphereGraphic;
+import com.ru.tgra.graphics.shapes.SpriteGraphic;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
 import com.ru.tgra.objects.Floor;
@@ -53,6 +54,7 @@ public class GameManager {
 		BoxGraphic.create();
 		SphereGraphic.create();
 		PlaneGraphic.create();
+		SpriteGraphic.create();
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
@@ -73,7 +75,7 @@ public class GameManager {
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		player = new Player(new Point3D(0f,4f,-3f), new Vector3D(0,0,1));
+		player = new Player(new Point3D(0f,2f,-3f), new Vector3D(0,0,1));
 		
 		floor = new Floor(
 				new Point3D((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2),

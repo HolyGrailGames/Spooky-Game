@@ -64,7 +64,7 @@ public class SphereGraphic {
 	}
 	
 	public static void drawSolidSphere(Shader shader, Texture diffuseTexture, Texture alphaTex) {
-
+		shader.clearTextures();
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTex);
 

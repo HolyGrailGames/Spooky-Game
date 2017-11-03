@@ -6,9 +6,11 @@ precision mediump float;
 
 uniform sampler2D u_diffuseTexture;
 uniform sampler2D u_alphaTexture;
+uniform sampler2D u_emissionTexture;
 
 uniform float u_usesDiffuseTexture;
 uniform float u_usesAlphaTexture;
+uniform float u_usesEmissionTexture;
 
 uniform vec4 u_globalAmbient;
 
@@ -50,6 +52,15 @@ void main()
 	else
 	{
 		materialDiffuse = u_materialDiffuse;
+	}
+	vec4 materialEmission;
+	if(u_usesEmissionTexture == 1.0)
+	{
+		materialEmission = texture2D(u_emissionTexture, v_uv); 
+	}
+	else
+	{
+		materialEmission = u_materialEmission;
 	}
 	
 	if(u_usesAlphaTexture == 1.0)

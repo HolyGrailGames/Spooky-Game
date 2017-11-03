@@ -23,6 +23,10 @@ public class Shader {
 	private boolean usesDiffuseTexture = false;
 	private int usesDiffuseTexLoc;
 	private int diffuseTextureLoc;
+	
+	private boolean usesEmissionTexture = false;
+	private int usesEmissionTexLoc;
+	private int emissionTextureLoc;
 
 	private boolean usesAlphaTexture = false;
 	private int usesAlphaTexLoc;
@@ -94,6 +98,9 @@ public class Shader {
 
 		usesDiffuseTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
 		diffuseTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
+		
+		usesEmissionTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesEmissionTexture");
+		emissionTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_emissionTexture");
 
 		usesAlphaTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesAlphaTexture");
 		alphaTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_alphaTexture");
@@ -143,6 +150,25 @@ public class Shader {
 		}
 	}
 	
+	public void setEmissionTexture(Texture tex)
+	{
+		if(tex == null)
+		{
+			Gdx.gl.glUniform1f(usesEmissionTexLoc, 0.0f);
+			usesEmissionTexture = false;
+		}
+		else
+		{
+			tex.bind(1);
+			Gdx.gl.glUniform1i(emissionTextureLoc, 1);
+			Gdx.gl.glUniform1f(usesEmissionTexLoc, 1.0f);
+			usesEmissionTexture = true;
+
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
+		}
+	}
+	
 	public void setAlphaTexture(Texture tex)
 	{
 		if(tex == null)
@@ -161,7 +187,7 @@ public class Shader {
 
 	public boolean usesTextures()
 	{
-		return (usesDiffuseTexture || usesAlphaTexture/* || usesSpecularTexture ... etc.*/);
+		return (usesDiffuseTexture || usesAlphaTexture || usesEmissionTexture/* || usesSpecularTexture ... etc.*/);
 	}
 
 
@@ -258,5 +284,12 @@ public class Shader {
 	public void setFogColor(float x, float y, float z, float w)
 	{
 		Gdx.gl.glUniform4f(fogColorLoc, x, y, z, w);
+	}
+	
+	public void clearTextures()
+	{
+		setAlphaTexture(null);
+		setDiffuseTexture(null);
+		setEmissionTexture(null);
 	}
 }
