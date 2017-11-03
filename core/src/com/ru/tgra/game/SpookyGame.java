@@ -121,7 +121,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		shader.setMaterialDiffuse(0.0f, 0.0f, 0.0f, 1.0f);
 		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
-		shader.setMaterialEmission(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setMaterialEmission(0.1f, 0.1f, 0.1f, 1.0f);
 		shader.setShininess(50.0f);
 		
 		// TODO: just have Global ambient lighting here

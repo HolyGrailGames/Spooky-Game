@@ -20,4 +20,60 @@ public class Material {
 		opacity = 1.0f;
 		shininess = 1.0f;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Color getAmbient() {
+		return ambient;
+	}
+
+	public void setAmbient(Color ambient) {
+		this.ambient = ambient;
+	}
+
+	public Color getDiffuse() {
+		return diffuse;
+	}
+
+	public void setDiffuse(Color diffuse) {
+		this.diffuse = diffuse;
+	}
+
+	public Color getSpecular() {
+		return specular;
+	}
+
+	public void setSpecular(Color specular) {
+		this.specular = specular;
+	}
+
+	public Color getEmission() {
+		return emission;
+	}
+
+	public void setEmission(Color emission) {
+		this.emission = emission;
+	}
+
+	public float getOpacity() {
+		return opacity;
+	}
+
+	public void setOpacity(float opacity) {
+		this.opacity = opacity;
+	}
+
+	public float getShininess() {
+		return shininess;
+	}
+
+	public void setShininess(float shininess) {
+		this.shininess = shininess;
+	}
 }
