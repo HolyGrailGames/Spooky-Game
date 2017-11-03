@@ -60,7 +60,7 @@ public class SpriteGraphic {
 
 	}
 
-	public static void drawSolidCube(Shader shader, Texture emissionTexture, Texture alphaTexture) {
+	public static void drawSprite(Shader shader, Texture emissionTexture, Texture alphaTexture) {
 		shader.clearTextures();
 		shader.setEmissionTexture(emissionTexture);
 		shader.setAlphaTexture(alphaTexture);
@@ -71,5 +71,4 @@ public class SpriteGraphic {
 
 		Gdx.gl.glDrawElements(GL20.GL_TRIANGLE_FAN, 4, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
-
 }

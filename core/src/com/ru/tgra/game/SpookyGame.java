@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.graphics.*;
 import com.ru.tgra.graphics.shapes.*;
@@ -28,7 +29,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	
 	private static Texture tex;
 	private static Texture groundTexture1;
-	//private static Texture alphaTex;
+	private static Texture alphaTex;
 	
 	
 	public static Player player;
@@ -49,6 +50,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		SphereGraphic.create();
 		PlaneGraphic.create();
 		SpriteGraphic.create();
+		Particles.create();
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
@@ -69,12 +71,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
-		//alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
+		alphaTex = new Texture(Gdx.files.internal("textures/flamealphatex.png"));
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 		
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 
-		player = new Player(new Point3D(0f,2f,0f), new Vector3D(1,0,1));
+		player = new Player(new Point3D(10f, 2f, 10f), new Vector3D(1,0,1));
 		
 		floor = new Floor(
 				new Point3D((Settings.GROUND_WIDTH*3)/2, -0.5f, (Settings.GROUND_HEIGHT*3)/2),
@@ -110,10 +112,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	private void display()
 	{
 		//do all actual drawing and rendering here
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		
-		shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setMaterialDiffuse(0.0f, 0.0f, 0.0f, 1.0f);
 		shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
-		shader.setMaterialEmission(0, 0, 0, 1);
+		shader.setMaterialEmission(1.0f, 1.0f, 1.0f, 1.0f);
 		shader.setShininess(50.0f);
 		
 		// TODO: just have Global ambient lighting here
@@ -146,7 +150,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(10, 2, 2);
-		ModelMatrix.main.addScale(4, 4, 4);
+		ModelMatrix.main.addScale(4, 4, 4);	
 		
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		BoxGraphic.drawSolidCube(shader, null, null);
@@ -155,10 +159,15 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(2, 2, 10);
-		ModelMatrix.main.addScale(4, 4, 4);
+		ModelMatrix.main.addScale(2, 2, 2);
 		
+
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube(shader, null, null);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		SpriteGraphic.drawSprite(shader, Particles.flameTex, alphaTex);
+		
+		
 		
 		ModelMatrix.main.popMatrix();
 		
