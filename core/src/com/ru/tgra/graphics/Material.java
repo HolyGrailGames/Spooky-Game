@@ -1,6 +1,6 @@
 package com.ru.tgra.graphics;
 
-import com.ru.tgra.utils.Color;
+import com.badlogic.gdx.graphics.Color;
 
 public class Material {
 	public String id;
@@ -13,12 +13,22 @@ public class Material {
 
 	public Material()
 	{
-		ambient = new Color(0.0f, 0.0f, 0.0f);
-		diffuse = new Color(0.0f, 0.0f, 0.0f);
-		specular = new Color(0.0f, 0.0f, 0.0f);
-		emission = new Color(0.0f, 0.0f, 0.0f);
+		ambient = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		diffuse = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		emission = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 		opacity = 1.0f;
 		shininess = 1.0f;
+	}
+	
+	public Material(Color diffuse, Color specular, Color emission, float shininess)
+	{
+		this.ambient = new Color(0.0f, 0.0f, 0.0f, 1.0f); // TODO: make constructor that takes ambient
+		this.diffuse = diffuse;
+		this.specular = specular;
+		this.emission = emission;
+		this.opacity = 1.0f; // TODO: make constructor that takes opacity
+		this.shininess = shininess;
 	}
 
 	public String getId() {

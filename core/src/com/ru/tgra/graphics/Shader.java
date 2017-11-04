@@ -184,6 +184,13 @@ public class Shader {
 			usesAlphaTexture = true;
 		}
 	}
+	
+	public void setMaterial(Material material) {
+		setMaterialDiffuse(material.diffuse.r, material.diffuse.g,material.diffuse.b, material.diffuse.a);
+		setMaterialSpecular(material.specular.r, material.specular.g,material.specular.b, material.specular.a);
+		setMaterialEmission(material.emission.r, material.emission.g,material.emission.b, material.emission.a);
+		setShininess(material.shininess);
+	}
 
 	public boolean usesTextures()
 	{
