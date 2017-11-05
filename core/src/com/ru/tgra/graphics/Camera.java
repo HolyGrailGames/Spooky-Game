@@ -2,6 +2,8 @@ package com.ru.tgra.graphics;
 
 import java.nio.FloatBuffer;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
@@ -27,11 +29,11 @@ public class Camera {
 
 	private FloatBuffer matrixBuffer;
 	
-	public Camera()
+	public Camera(Point3D position)
 	{
 		matrixBuffer = BufferUtils.newFloatBuffer(16);
 
-		eye = new Point3D();
+		eye = position;
 		u = new Vector3D(1,0,0);
 		v = new Vector3D(0,1,0);
 		n = new Vector3D(0,0,1);
@@ -189,6 +191,37 @@ public class Camera {
 		matrixBuffer.rewind();
 		
 		return matrixBuffer;
+	}
+
+	public void display(Shader shader) {
+
+		/*** MAYBE NEED SOME OF THIS? ***/
+		//Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
+
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+
+		//Gdx.gl.glEnable(GL20.GL_BLEND);
+		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		//Gdx.gl.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
+		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+		/*** ------------------------ ***/
+
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		//Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		perspectiveProjection(Settings.FOV, (float)Gdx.graphics.getWidth() / (float)(Gdx.graphics.getHeight()), 0.2f, 150.0f);
+
+		shader.setViewMatrix(getViewMatrix());
+		shader.setProjectionMatrix(getProjectionMatrix());
+		shader.setEyePosition(eye.x, eye.y, eye.z, 1.0f);
+
+		setFog(shader);
+	}
+
+	private void setFog(Shader shader) {
+		shader.setFogStart(Settings.FOG_START);
+		shader.setFogEnd(Settings.FOG_END);
+		shader.setFogColor(Settings.FOG_COLOR);	// clear color should be same as fog color
 	}
 
 	

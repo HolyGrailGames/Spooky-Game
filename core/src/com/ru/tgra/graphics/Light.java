@@ -1,92 +1,96 @@
 package com.ru.tgra.graphics;
 
-import com.ru.tgra.utils.Color;
+import com.badlogic.gdx.graphics.Color;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Vector3D;
 
 public class Light {
-    private int index;
-    private Point3D position;
-    private Vector3D direction;
-    private Color color;
+	//private int index;
+	public Point3D position;
+	public Vector3D direction;
+	public Color color;
 
-    private float spotExponent;
-    private float constantAttenuation;
-    private float linearAttenuation;
-    private float quadraticAttenuation;
+	public float spotExponent;
+	public float constantAttenuation;
+	public float linearAttenuation;
+	public float quadraticAttenuation;
 
-    public Light(int id, Point3D position, Vector3D direction, Color color, float spotExponent, float constantAttenuation, float linearAttenuation, float quadraticAttenuation) {
-        this.index = id;
-        this.position = position;
-        this.direction = direction;
-        this.color = color;
-        this.spotExponent = spotExponent;
-        this.constantAttenuation = constantAttenuation;
-        this.linearAttenuation = linearAttenuation;
-        this.quadraticAttenuation = quadraticAttenuation;
-    }
+	public Light(/*int id, */Point3D position, Vector3D direction, Color color, float spotExponent, float constantAttenuation, float linearAttenuation, float quadraticAttenuation) {
+		//this.index = id;
+		this.position = position;
+		this.direction = direction;
+		this.color = color;
+		this.spotExponent = spotExponent;
+		this.constantAttenuation = constantAttenuation;
+		this.linearAttenuation = linearAttenuation;
+		this.quadraticAttenuation = quadraticAttenuation;
+	}
+	/*
+		public int getIndex() {
+			return index;
+		}
 
-    public int getIndex() {
-        return index;
-    }
+		public void setIndex(int index) {
+			this.index = index;
+		}
+	*/
+	public Point3D getPosition() {
+		return position;
+	}
 
-    public void setIndex(int index) {
-        this.index = index;
-    }
+	public void setPosition(Point3D position) {
+		this.position = position;
+	}
 
-    public Point3D getPosition() {
-        return position;
-    }
+	public Vector3D getDirection() {
+		return direction;
+	}
 
-    public void setPosition(Point3D position) {
-        this.position = position;
-    }
+	public void setDirection(Vector3D direction) {
+		this.direction = direction;
+	}
 
-    public Vector3D getDirection() {
-        return direction;
-    }
+	public Color getColor() {
+		return color;
+	}
 
-    public void setDirection(Vector3D direction) {
-        this.direction = direction;
-    }
+	public void setColor(Color color) {
+		this.color = color;
+	}
 
-    public Color getColor() {
-        return color;
-    }
+	public float getSpotExponent() {
+		return spotExponent;
+	}
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
+	public void setSpotExponent(float spotExponent) {
+		this.spotExponent = spotExponent;
+	}
 
-    public float getSpotExponent() {
-        return spotExponent;
-    }
+	public float getConstantAttenuation() {
+		return constantAttenuation;
+	}
 
-    public void setSpotExponent(float spotExponent) {
-        this.spotExponent = spotExponent;
-    }
+	public void setConstantAttenuation(float constantAttenuation) {
+		this.constantAttenuation = constantAttenuation;
+	}
 
-    public float getConstantAttenuation() {
-        return constantAttenuation;
-    }
+	public float getLinearAttenuation() {
+		return linearAttenuation;
+	}
 
-    public void setConstantAttenuation(float constantAttenuation) {
-        this.constantAttenuation = constantAttenuation;
-    }
+	public void setLinearAttenuation(float linearAttenuation) {
+		this.linearAttenuation = linearAttenuation;
+	}
 
-    public float getLinearAttenuation() {
-        return linearAttenuation;
-    }
+	public float getQuadraticAttenuation() {
+		return quadraticAttenuation;
+	}
 
-    public void setLinearAttenuation(float linearAttenuation) {
-        this.linearAttenuation = linearAttenuation;
-    }
+	public void setQuadraticAttenuation(float quadraticAttenuation) {
+		this.quadraticAttenuation = quadraticAttenuation;
+	}
 
-    public float getQuadraticAttenuation() {
-        return quadraticAttenuation;
-    }
-
-    public void setQuadraticAttenuation(float quadraticAttenuation) {
-        this.quadraticAttenuation = quadraticAttenuation;
-    }
+	public void display(Shader shader) {
+		shader.setLight(this);
+	}
 }

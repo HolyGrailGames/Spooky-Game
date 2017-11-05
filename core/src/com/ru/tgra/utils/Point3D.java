@@ -19,12 +19,6 @@ public class Point3D {
 		this.y = y;
 		this.z = z;
 	}
-	
-	public Point3D(Point3D p) {
-		this.x = p.x;
-		this.y = p.y;
-		this.z = p.z;
-	}
 
 	public void add(Vector3D v)
 	{
@@ -44,18 +38,19 @@ public class Point3D {
 		this.y = y;
 		this.z = z;
 	}
-	
+
 	public void set(Point3D p)
 	{
 		this.x = p.x;
 		this.y = p.y;
 		this.z = p.z;
 	}
-	
-	public void translate(float dx, float dy, float dz) {
-		x += dx;
-		y += dy;
-		z += dz;
+
+	public void translate(float dx, float dy, float dz)
+	{
+		this.x = dx;
+		this.y = dy;
+		this.z = dz;
 	}
 	
 	

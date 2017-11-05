@@ -21,8 +21,6 @@ varying vec4 v_normal;
 varying vec4 v_s;
 varying vec4 v_h;
 
-varying float v_distance;
-
 void main()
 {
 	vec4 position = vec4(a_position.x, a_position.y, a_position.z, 1.0);
@@ -41,20 +39,16 @@ void main()
 	v_normal = normal;
 
 	v_s = normalize(u_lightPosition - position); //direction to the light
-	//vec4 v = normalize(u_eyePosition - position); //direction to the camera
-	vec4 v = u_eyePosition - position; //direction to the camera
-	v_distance = length(v);
+	vec4 v = normalize(u_eyePosition - position); //direction to the camera
 	
-	v_h = v_s + normalize(v);
+	v_h = v_s + v;
 
 
-	
+
 
 
 	position = u_viewMatrix * position;
 	//eye coordinates
-	
-	//v_distance = -position.z;
 
 	v_uv = a_uv;
 	gl_Position = u_projectionMatrix * position;

@@ -20,10 +20,10 @@ public class PlaneGraphic {
 
 		//VERTEX ARRAY IS FILLED HERE
 		float[] vertexArray = {
-				-0.5f, 0.5f, -0.5f,
-				0.5f, 0.5f, -0.5f,
-				0.5f, 0.5f, 0.5f,
-				-0.5f, 0.5f, 0.5f};
+				-0.5f, 0.0f, -0.5f,
+				0.5f, 0.0f, -0.5f,
+				0.5f, 0.0f, 0.5f,
+				-0.5f, 0.0f, 0.5f};
 						
 		vertexBuffer = BufferUtils.newFloatBuffer(12);
 		BufferUtils.copy(vertexArray, 0, vertexBuffer, 12);
@@ -59,17 +59,16 @@ public class PlaneGraphic {
 		indexBuffer.rewind();
 	}
 
-	public static void drawSolidCube(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
-		shader.setEmissionTexture(null);
+	public static void drawSolidPlane(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
+
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTexture);
-		
 
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
 
-		Gdx.gl.glDrawElements(GL20.GL_TRIANGLE_FAN, 4, GL20.GL_UNSIGNED_SHORT, indexBuffer);
+		Gdx.gl.glDrawElements(GL20.GL_TRIANGLE_FAN, 1, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 
 }

@@ -141,7 +141,7 @@ public class BoxGraphic {
 	}
 
 	public static void drawSolidCube(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
-		shader.setEmissionTexture(null);
+
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTexture);
 

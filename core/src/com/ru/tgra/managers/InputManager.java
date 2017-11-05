@@ -3,6 +3,7 @@ package com.ru.tgra.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.ru.tgra.game.Player;
+import com.ru.tgra.game.SpookyGame;
 import com.ru.tgra.graphics.Camera;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Point3D;
@@ -14,23 +15,25 @@ public class InputManager {
 
 	public static void processInput(Player player, float deltaTime) {
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			player.walkSideways(-deltaTime, 0, 0);
+			player.walkLeft(deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			player.walkSideways(deltaTime, 0, 0);
+			player.walkRight(deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			player.walkForward(deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			player.walkForward(-deltaTime);
+			player.walkBackwards(deltaTime);
 		}
+
+
 		// TODO: shouldn't be walkSideways, this should be disabled anyway and walkSideways should only take in deltaTime
 		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-			player.walkSideways(0, deltaTime, 0);
+			player.flyUp(deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-			player.walkSideways(0, -deltaTime, 0);
+			player.flyDown(deltaTime);
 		}
 
 		/*
@@ -42,7 +45,7 @@ public class InputManager {
 			Settings.FOV += 30.0f * deltaTime;
 		}
 		*/
-		
+
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
 		{
 			Gdx.graphics.setDisplayMode(500, 500, false);
@@ -56,29 +59,33 @@ public class InputManager {
 			lastMousePos = new Point3D(screenX, screenY, 0.0f);
 			return false;
 		}
-		
-		float deltaTime = Gdx.graphics.getDeltaTime();
+
 		currMousePos.set(screenX, screenY, 0.0f);
 		
 		float dx = currMousePos.x - lastMousePos.x;
 		float dy = currMousePos.y - lastMousePos.y;
 		
 		lastMousePos.set(currMousePos.x, currMousePos.y, currMousePos.z);
-		
+
+		player.yaw(dx);
+		player.pitch(dy);
+
+		/*
 		if(dx < 0) {
 			player.lookLeftRight(Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dx));
 		}
 		if(dx > 0) {
 			player.lookLeftRight(-Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dx));
 		}
-		
+
 		if(dy < 0) {
 			player.lookUpDown(Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dy));
 		}
 		if(dy > 0) {
 			player.lookUpDown(-Settings.MOUSE_SENSITIVITY * deltaTime * Math.abs(dy));
 		}
-		
+		*/
+
 		return false;
 	}
 }

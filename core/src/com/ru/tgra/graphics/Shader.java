@@ -3,6 +3,7 @@ package com.ru.tgra.graphics;
 import java.nio.FloatBuffer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -23,10 +24,6 @@ public class Shader {
 	private boolean usesDiffuseTexture = false;
 	private int usesDiffuseTexLoc;
 	private int diffuseTextureLoc;
-	
-	private boolean usesEmissionTexture = false;
-	private int usesEmissionTexLoc;
-	private int emissionTextureLoc;
 
 	private boolean usesAlphaTexture = false;
 	private int usesAlphaTexLoc;
@@ -98,9 +95,6 @@ public class Shader {
 
 		usesDiffuseTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
 		diffuseTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
-		
-		usesEmissionTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesEmissionTexture");
-		emissionTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_emissionTexture");
 
 		usesAlphaTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesAlphaTexture");
 		alphaTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_alphaTexture");
@@ -150,6 +144,24 @@ public class Shader {
 		}
 	}
 	
+	public void setAlphaTexture(Texture tex)
+	{
+		if(tex == null)
+		{
+			Gdx.gl.glUniform1f(usesAlphaTexLoc, 0.0f);
+			usesAlphaTexture = false;
+		}
+		else
+		{
+			tex.bind(0);
+			Gdx.gl.glUniform1i(alphaTextureLoc, 0);
+			Gdx.gl.glUniform1f(usesAlphaTexLoc, 1.0f);
+			usesAlphaTexture = true;
+		}
+	}
+	
+	// TODO: fix
+	/*
 	public void setEmissionTexture(Texture tex)
 	{
 		if(tex == null)
@@ -168,33 +180,11 @@ public class Shader {
 			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
 		}
 	}
-	
-	public void setAlphaTexture(Texture tex)
-	{
-		if(tex == null)
-		{
-			Gdx.gl.glUniform1f(usesAlphaTexLoc, 0.0f);
-			usesAlphaTexture = false;
-		}
-		else
-		{
-			tex.bind(0);
-			Gdx.gl.glUniform1i(alphaTextureLoc, 0);
-			Gdx.gl.glUniform1f(usesAlphaTexLoc, 1.0f);
-			usesAlphaTexture = true;
-		}
-	}
-	
-	public void setMaterial(Material material) {
-		setMaterialDiffuse(material.diffuse.r, material.diffuse.g,material.diffuse.b, material.diffuse.a);
-		setMaterialSpecular(material.specular.r, material.specular.g,material.specular.b, material.specular.a);
-		setMaterialEmission(material.emission.r, material.emission.g,material.emission.b, material.emission.a);
-		setShininess(material.shininess);
-	}
+	*/
 
 	public boolean usesTextures()
 	{
-		return (usesDiffuseTexture || usesAlphaTexture || usesEmissionTexture/* || usesSpecularTexture ... etc.*/);
+		return (usesDiffuseTexture || usesAlphaTexture/* || usesSpecularTexture ... etc.*/);
 	}
 
 
@@ -288,8 +278,27 @@ public class Shader {
 	{
 		Gdx.gl.glUniform1f(fogEndLoc, end);
 	}
-	public void setFogColor(float x, float y, float z, float w)
+	public void setFogColor(Color color)
 	{
-		Gdx.gl.glUniform4f(fogColorLoc, x, y, z, w);
+		Gdx.gl.glUniform4f(fogColorLoc, color.r, color.g, color.b, color.a);
+	}
+
+	public void setLight(Light light) {
+		setLightPosition(light.position.x, light.position.y, light.position.z, 1.0f);
+		setSpotDirection(light.direction.x, light.direction.y, light.direction.z, 0.0f);
+		setLightColor(light.color.r, light.color.g, light.color.b, light.color.a);
+
+		setSpotExponent(light.spotExponent);
+		setConstantAttenuation(light.constantAttenuation);
+		setLinearAttenuation(light.linearAttenuation);
+		setQuadraticAttenuation(light.quadraticAttenuation);
+	}
+
+	public void setMaterial(Material material)
+	{
+		setMaterialDiffuse(material.diffuse.r, material.diffuse.g,material.diffuse.b, material.diffuse.a);
+		setMaterialSpecular(material.specular.r, material.specular.g,material.specular.b, material.specular.a);
+		setMaterialEmission(material.emission.r, material.emission.g,material.emission.b, material.emission.a);
+		setShininess(material.shininess);
 	}
 }

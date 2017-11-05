@@ -5,13 +5,9 @@ precision mediump float;
 #endif
 
 uniform sampler2D u_diffuseTexture;
-uniform sampler2D u_alphaTexture;
-uniform sampler2D u_emissionTexture;
 
 uniform float u_usesDiffuseTexture;
-uniform float u_usesAlphaTexture;
-uniform float u_usesEmissionTexture;
-		      
+
 uniform vec4 u_globalAmbient;
 
 uniform vec4 u_lightColor;
@@ -29,14 +25,6 @@ uniform float u_materialShininess;
 
 uniform vec4 u_materialEmission;
 
-// FOG stuff
-
-uniform float u_fogStart;
-uniform float u_fogEnd;
-uniform vec4 u_fogColor;
-
-varying float v_distance;
-
 varying vec2 v_uv;
 varying vec4 v_normal;
 varying vec4 v_s;
@@ -47,32 +35,11 @@ void main()
 	vec4 materialDiffuse;
 	if(u_usesDiffuseTexture == 1.0)
 	{
-		materialDiffuse = texture2D(u_diffuseTexture, v_uv); //  * u_materialDiffuse;   Also * u_materialDiffuse ??? up to you.
+		materialDiffuse = texture2D(u_diffuseTexture, v_uv);  //also * u_materialDiffuse ??? up to you.
 	}
 	else
 	{
 		materialDiffuse = u_materialDiffuse;
-	}
-	vec4 materialEmission;
-	if(u_usesEmissionTexture == 1.0)
-	{
-		materialEmission = texture2D(u_emissionTexture, v_uv); // * u_materialEmission;  Also * u_materialEmission ??? up to you. 		
-	}
-	else
-	{
-		materialEmission = u_materialEmission;
-	}
-	
-	if(u_usesAlphaTexture == 1.0)
-	{
-		materialDiffuse.a = texture2D(u_alphaTexture, v_uv).r;
-	}
-	
-	materialDiffuse.a *= materialEmission.a;
-	
-	if(materialDiffuse.a < 0.1) 
-	{
-		discard;
 	}
 
 	vec4 materialSpecular = u_materialSpecular;
@@ -101,26 +68,9 @@ void main()
 
 	// end for each light
 	
-	vec4 finalObjectColor = u_globalAmbient * materialDiffuse + materialEmission + light1CalcColor;
 	
-	// FOG stuff
-	if(v_distance < u_fogStart) 
-	{
-		gl_FragColor = finalObjectColor;
-	}
-	else if(v_distance > u_fogEnd) 
-	{	// It's possible to optimize this by having this if check at the top of
-		// the shader and just have if(v_distance < u_fogStart)
-		gl_FragColor = u_fogColor;
-	}
-	else 
-	{
-		// Possible to optimize this by setting the fog width somewhere so we don't 
-		// need to calculate this every time
-		float fogRatio = (v_distance - u_fogStart) / (u_fogEnd - u_fogStart);
-		gl_FragColor = (1 - fogRatio) * finalObjectColor + fogRatio * u_fogColor;
-		
-	}
-	gl_FragColor.a = materialDiffuse.a;
-	
+
+	//gl_FragColor = u_globalAmbient + u_materialEmission + light1CalcColor;
+	gl_FragColor = u_globalAmbient * materialDiffuse + u_materialEmission + light1CalcColor;
+	//gl_FragColor.a = 0.5;
 }

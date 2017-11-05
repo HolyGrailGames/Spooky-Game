@@ -20,7 +20,7 @@ public class Material {
 		opacity = 1.0f;
 		shininess = 1.0f;
 	}
-	
+
 	public Material(Color diffuse, Color specular, Color emission, float shininess)
 	{
 		this.ambient = new Color(0.0f, 0.0f, 0.0f, 1.0f); // TODO: make constructor that takes ambient

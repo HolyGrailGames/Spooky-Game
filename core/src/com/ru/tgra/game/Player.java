@@ -4,77 +4,91 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.ru.tgra.graphics.Camera;
 import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.objects.Flashlight;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
 
 public class Player {
-	
+
 	public Point3D position;
 	public Vector3D direction;
-	public Camera cam;
+
+	private Camera cam;
+	private Vector3D velocity;
+	private float pitch;
+	private float yaw;
+	private Flashlight flashlight;
 
 	public Player(Point3D position, Vector3D direction) {
 		this.position = position;
 		this.direction = direction;
-		this.cam = new Camera();
+		this.cam = new Camera(position);
+		this.velocity = new Vector3D();
+		this.pitch = 0;
+		this.yaw = 0;
+		this.flashlight = new Flashlight(position, direction);
+
 		cam.look(position, new Point3D(direction.x+position.x, position.y, direction.z+position.z), Vector3D.up());
 	}
 
 	public void update(float deltaTime) {
-		
+		cam.slide(velocity.x, velocity.y, 0);
+		cam.walkForward(velocity.z);
+		cam.rotateY(yaw*deltaTime*Settings.MOUSE_SENSITIVITY);
+		cam.pitch(pitch*deltaTime*Settings.MOUSE_SENSITIVITY);
+
+		direction.set(-cam.n.x,-cam.n.y,-cam.n.z);
+
+		velocity.zero();
+		pitch = 0;
+		yaw = 0;
 	}
 
 	public void display(Shader shader) {
-		displayCamera(shader);
+		flashlight.display(shader);
+		cam.display(shader);
 	}
-	
-	public void walkSideways(float dx, float dy, float dz) {
-		cam.slide(dx*Settings.WALK_SPEED, dy*Settings.WALK_SPEED, dz*Settings.WALK_SPEED);
-		position.set(cam.eye);
-	}
-	
-	public void walkForward(float deltaTime) {
-		cam.walkForward(deltaTime*Settings.WALK_SPEED);
-		position.set(cam.eye);
-	}
-	
+
 	public void lookUpDown(float angle) {
 		cam.pitch(angle);
 		direction.set(-cam.n.x,-cam.n.y,-cam.n.z);
 	}
-	
+
 	public void lookLeftRight(float angle) {
 		cam.rotateY(angle);
 		direction.set(-cam.n.x,-cam.n.y,-cam.n.z);
 	}
-	
-	private void displayCamera(Shader shader) {
-		Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+	public void walkLeft(float deltaTime) {
+		velocity.x = -deltaTime * Settings.WALK_SPEED;
+	}
 
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		//Gdx.gl.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
-		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+	public void walkRight(float deltaTime) {
+		velocity.x = deltaTime * Settings.WALK_SPEED;
+	}
 
-		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.perspectiveProjection(Settings.FOV, (float)Gdx.graphics.getWidth() / (float)(Gdx.graphics.getHeight()), 0.2f, Settings.FOG_END);
-		shader.setViewMatrix(cam.getViewMatrix());
-		shader.setProjectionMatrix(cam.getProjectionMatrix());
-		shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
-		
-		
-		shader.setFogStart(Settings.FOG_START);
-		shader.setFogEnd(Settings.FOG_END);
-		shader.setFogColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
-		
-		// clear color should be same as fog color
-		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
-		
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	public void walkForward(float deltaTime) {
+		velocity.z = deltaTime * Settings.WALK_SPEED;
+	}
+
+	public void walkBackwards(float deltaTime) {
+		velocity.z = -deltaTime * Settings.WALK_SPEED;
+	}
+
+	public void flyUp(float deltaTime) {
+		velocity.y = deltaTime * Settings.WALK_SPEED;
+	}
+
+	public void flyDown(float deltaTime) {
+		velocity.y = -deltaTime * Settings.WALK_SPEED;
+	}
+
+	public void pitch(float angle) {
+		this.pitch = -angle;
+	}
+
+	public void yaw(float angle) {
+		this.yaw = -angle;
 	}
 }

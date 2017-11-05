@@ -2,6 +2,7 @@ package com.ru.tgra.objects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.ru.tgra.graphics.Material;
 import com.ru.tgra.graphics.Shader;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Vector3D;
@@ -10,54 +11,78 @@ import com.ru.tgra.utils.Vector3D;
 public abstract class GameObject {
 	protected Point3D position;
 	protected Vector3D scale;
-	protected Vector3D rotation;
-	protected Color color;
+	protected Vector3D direction;
+	protected Material material;
 	protected Texture tex;
-	
-	public GameObject(Point3D position, Vector3D scale, Vector3D rotation, Color color, Texture tex) {
+
+	public GameObject(Point3D position, Vector3D direction, Vector3D scale, Material material, Texture tex) {
 		this.position = position;
 		this.scale = scale;
-		this.rotation = rotation;
-		this.color = color;
+		this.direction = direction;
+		this.material = material;
 		this.tex = tex;
 	}
-	
+
+	public GameObject(Point3D position, Vector3D direction, Vector3D scale) {
+		this.position = position;
+		this.scale = scale;
+		this.direction = direction;
+		this.material = null;
+		this.tex = null;
+	}
+
+	public GameObject(Point3D position, Vector3D direction) {
+		this.position = position;
+		this.direction = direction;
+		this.scale = new Vector3D(1,1,1);
+		this.material = null;
+		this.tex = null;
+	}
+
 	public void setPosition(Point3D position) {
 		this.position = position;
 	}
-	
+
 	public Point3D getPosition() {
 		return this.position;
 	}
-	
+
 	public void setScale(Vector3D scale) {
 		this.scale = scale;
 	}
-	
+
 	public Vector3D getScale() {
 		return this.scale;
 	}
-	
-	public void setRotation(Vector3D rotation) {
-		this.rotation = rotation;
+
+	public void setDirection(Vector3D direction) {
+		this.direction = direction;
 	}
-	
-	public Vector3D getRotation() {
-		return this.rotation;
+
+	public Vector3D getDirection() {
+		return this.direction;
 	}
-	
-	public void setColor(Color color) {
-		this.color = color;
-	}
-	
-	public Color getColor() {
-		return this.color;
-	}
-	
+
 	public void translate(float dx, float dy, float dz) {
 		position.translate(dx, dy, dz);
 	}
-	
+
+	public Material getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(Material material) {
+		this.material = material;
+	}
+
+	public Texture getTex() {
+		return tex;
+	}
+
+	public void setTex(Texture tex) {
+		this.tex = tex;
+	}
+
 	/*
 	 * METHODS THAT NEED TO BE IMPLEMENTED BY SUBCLASSES:
 	 */

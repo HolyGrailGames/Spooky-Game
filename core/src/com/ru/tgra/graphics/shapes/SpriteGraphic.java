@@ -61,7 +61,8 @@ public class SpriteGraphic {
 	}
 
 	public static void drawSprite(Shader shader, Texture emissionTexture, Texture alphaTexture) {
-		shader.setEmissionTexture(emissionTexture);
+		// TODO: fix emission
+		//shader.setEmissionTexture(emissionTexture);
 		shader.setAlphaTexture(alphaTexture);
 		shader.setDiffuseTexture(null);
 
