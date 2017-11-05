@@ -42,6 +42,7 @@ public class Flashlight extends GameObject {
 			light.display(shader);
 		}
 		else {
+			shader.setLightOn(0.0f);
 			// something?
 		}
 	}

@@ -91,4 +91,8 @@ public class Player {
 	public void yaw(float angle) {
 		this.yaw = -angle;
 	}
+	
+	public void toggleFlashlight() {
+		flashlight.toggle();
+	}
 }

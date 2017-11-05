@@ -11,6 +11,7 @@ uniform float u_usesDiffuseTexture;
 uniform vec4 u_globalAmbient;
 
 uniform vec4 u_lightColor;
+uniform float u_lightOn;
 
 uniform vec4 u_spotDirection;
 uniform float u_spotExponent;
@@ -46,31 +47,37 @@ void main()
 
 	//Lighting
 	
-	float length_s = length(v_s);
+	if (u_lightOn == 1.0f) {
 	
-	float lambert = max(0.0, dot(v_normal, v_s) / (length(v_normal) * length_s));
-	float phong = max(0.0, dot(v_normal, v_h) / (length(v_normal) * length(v_h)));
-
-	vec4 diffuseColor = lambert * u_lightColor * materialDiffuse;
-
-	vec4 specularColor = pow(phong, u_materialShininess) * u_lightColor * materialSpecular;
-
-	float attenuation = 1.0;
-	if(u_spotExponent != 0.0)
-	{
-		float spotAttenuation = max(0.0, dot(-v_s, u_spotDirection) / (length_s * length(u_spotDirection)));
-		spotAttenuation = pow(spotAttenuation, u_spotExponent);
-		attenuation *= spotAttenuation;
-	}
-	attenuation *= 1.0 / (u_constantAttenuation + length_s * u_linearAttenuation + pow(length_s, 2.0) * u_quadraticAttenuation);
+		float length_s = length(v_s);
 		
-	vec4 light1CalcColor = attenuation * (diffuseColor + specularColor);
-
-	// end for each light
+		float lambert = max(0.0, dot(v_normal, v_s) / (length(v_normal) * length_s));
+		float phong = max(0.0, dot(v_normal, v_h) / (length(v_normal) * length(v_h)));
 	
+		vec4 diffuseColor = lambert * u_lightColor * materialDiffuse;
+	
+		vec4 specularColor = pow(phong, u_materialShininess) * u_lightColor * materialSpecular;
+	
+		float attenuation = 1.0;
+		if(u_spotExponent != 0.0)
+		{
+			float spotAttenuation = max(0.0, dot(-v_s, u_spotDirection) / (length_s * length(u_spotDirection)));
+			spotAttenuation = pow(spotAttenuation, u_spotExponent);
+			attenuation *= spotAttenuation;
+		}
+		attenuation *= 1.0 / (u_constantAttenuation + length_s * u_linearAttenuation + pow(length_s, 2.0) * u_quadraticAttenuation);
+			
+		vec4 light1CalcColor = attenuation * (diffuseColor + specularColor);
+	
+		// end for each light
+		gl_FragColor = u_globalAmbient * materialDiffuse + u_materialEmission + light1CalcColor;
+	}
+	else {
+		gl_FragColor = u_globalAmbient * materialDiffuse + u_materialEmission;
+	}
 	
 
 	//gl_FragColor = u_globalAmbient + u_materialEmission + light1CalcColor;
-	gl_FragColor = u_globalAmbient * materialDiffuse + u_materialEmission + light1CalcColor;
+	
 	//gl_FragColor.a = 0.5;
 }

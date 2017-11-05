@@ -34,6 +34,7 @@ public class Shader {
 	private int globalAmbLoc;
 	//private int colorLoc;
 	private int lightPosLoc;
+	private int lightOnLoc;
 
 	private int spotDirLoc;
 	private int spotExpLoc;
@@ -104,6 +105,7 @@ public class Shader {
 		globalAmbLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
 
 		lightPosLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition");
+		lightOnLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightOn");
 
 		spotDirLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_spotDirection");
 		spotExpLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_spotExponent");
@@ -221,6 +223,11 @@ public class Shader {
 	{
 		Gdx.gl.glUniform1f(quadraticAttLoc, att);
 	}
+	
+	public void setLightOn(float on)
+	{
+		Gdx.gl.glUniform1f(lightOnLoc, on);
+	}
 
 	public void setLightColor(float r, float g, float b, float a)
 	{
@@ -284,6 +291,7 @@ public class Shader {
 	}
 
 	public void setLight(Light light) {
+		setLightOn(1.0f);
 		setLightPosition(light.position.x, light.position.y, light.position.z, 1.0f);
 		setSpotDirection(light.direction.x, light.direction.y, light.direction.z, 0.0f);
 		setLightColor(light.color.r, light.color.g, light.color.b, light.color.a);
