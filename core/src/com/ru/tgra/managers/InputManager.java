@@ -27,7 +27,6 @@ public class InputManager {
 			player.walkBackwards(deltaTime);
 		}
 
-/*
 		// TODO: shouldn't be walkSideways, this should be disabled anyway and walkSideways should only take in deltaTime
 		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
 			player.flyUp(deltaTime);
@@ -35,7 +34,6 @@ public class InputManager {
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
 			player.flyDown(deltaTime);
 		}
-*/
 		/*
 		// Zooming
 		if(Gdx.input.isKeyPressed(Input.Keys.T)) {
@@ -52,9 +50,11 @@ public class InputManager {
 			Gdx.app.exit();
 		}
 		
+		/*
 		if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
 			player.toggleFlashlight();
 		}
+		*/
 	}
 	
 	public static boolean mouseMoved(int screenX, int screenY, Player player) {

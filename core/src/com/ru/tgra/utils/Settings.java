@@ -6,7 +6,7 @@ import com.ru.tgra.graphics.Material;
 public class Settings {
 	/*** MOVEMENT ***/
 	public static final float MOUSE_SENSITIVITY = 7.0f;
-	public static final float WALK_SPEED = 3.0f;
+	public static final float WALK_SPEED = 1.0f;
 
 	/*** FOG ***/
 	public static final float FOG_START = 0.0f;
@@ -38,6 +38,13 @@ public class Settings {
 			new Color(0.7f, 0.7f, 0.7f, 1.0f),	// Diffuse
 			new Color(0.8f, 0.8f, 0.8f, 1.0f),	// Specular
 			new Color(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
+			128.0f	// Shininess
+	);
+	
+	public static final Material FL_MATERIAL = new Material(
+			new Color(1.0f, 1.0f, 0.0f, 1.0f),	// Diffuse
+			new Color(0.0f, 0.0f, 0.0f, 1.0f),	// Specular
+			new Color(0.5f, 0.5f, 0.5f, 1.0f),	// Emission
 			128.0f	// Shininess
 	);
 

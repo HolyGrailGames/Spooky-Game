@@ -209,7 +209,7 @@ public class Camera {
 
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		//Gdx.gl.glScissor(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		perspectiveProjection(Settings.FOV, (float)Gdx.graphics.getWidth() / (float)(Gdx.graphics.getHeight()), 0.2f, 150.0f);
+		perspectiveProjection(Settings.FOV, (float)Gdx.graphics.getWidth() / (float)(Gdx.graphics.getHeight()), 0.1f, 150.0f);
 
 		shader.setViewMatrix(getViewMatrix());
 		shader.setProjectionMatrix(getProjectionMatrix());

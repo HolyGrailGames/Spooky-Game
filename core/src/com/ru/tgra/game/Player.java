@@ -3,7 +3,9 @@ package com.ru.tgra.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.ru.tgra.graphics.Camera;
+import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.graphics.shapes.BoxGraphic;
 import com.ru.tgra.objects.Flashlight;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
@@ -14,11 +16,14 @@ public class Player {
 	public Point3D position;
 	public Vector3D direction;
 
-	private Camera cam;
+	public Camera cam;
 	private Vector3D velocity;
-	private float pitch;
-	private float yaw;
+	public float pitch;
+	public float yaw;
 	private Flashlight flashlight;
+	
+	private Point3D startPos;
+	private float totalYaw = 0;
 
 	public Player(Point3D position, Vector3D direction) {
 		this.position = position;
@@ -46,8 +51,8 @@ public class Player {
 	}
 
 	public void display(Shader shader) {
+		
 		flashlight.display(shader);
-		cam.display(shader);
 	}
 
 	public void lookUpDown(float angle) {
