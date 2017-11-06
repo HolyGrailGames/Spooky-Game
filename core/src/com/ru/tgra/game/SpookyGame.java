@@ -60,7 +60,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex2.png"));
 
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
-		model.setPosition(new Point3D(0.0f, 0.0f, -1.0f));
+		model.setPosition(new Point3D(0.0f, 2.0f, -1.0f));
 		
 		
 		
@@ -71,23 +71,23 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		*/
 		ArrayList<Point3D> controlPoints = new ArrayList<Point3D>();
-		controlPoints.add(new Point3D(0.0f, 0.0f, -1.0f));
-		controlPoints.add(new Point3D(15.0f, 0.0f, 3.0f));
-		controlPoints.add(new Point3D(0.0f, 0.0f, -2.0f));
-		controlPoints.add(new Point3D(3.0f, 2.0f, -1.0f));
-		controlPoints.add(new Point3D(6.0f, 0.0f, -1.0f));
-		controlPoints.add(new Point3D(6.0f, 7.0f, 1.0f));
-		controlPoints.add(new Point3D(4.0f, 0.0f, 5.0f));
-		controlPoints.add(new Point3D(0.0f, -1.0f, -3.0f));
-		controlPoints.add(new Point3D(2.0f, 3.0f, -7.0f));
-		controlPoints.add(new Point3D(0.0f, 0.0f, -2.0f));
-		controlPoints.add(new Point3D(1.0f, 1.0f, -4.0f));
-		controlPoints.add(new Point3D(0.0f, 3.0f, -5.0f));
-		controlPoints.add(new Point3D(3.0f, 2.0f, 1.0f));
-		controlPoints.add(new Point3D(0.0f, 0.0f, -2.0f));
+		controlPoints.add(new Point3D(0.0f, 1.0f, -1.0f));
+		controlPoints.add(new Point3D(5.0f, 1.5f, 3.0f));
+		controlPoints.add(new Point3D(10.0f, 0.5f, 7.0f));
+		controlPoints.add(new Point3D(15.0f, 1.0f, 11.0f));
+		controlPoints.add(new Point3D(10.0f, 1.0f, 15.0f));
+		controlPoints.add(new Point3D(5.0f, 1.0f, 9.0f));
+		controlPoints.add(new Point3D(0.0f, 1.5f, 11.0f));
+		controlPoints.add(new Point3D(5.0f, 0.5f, 13.0f));
+		controlPoints.add(new Point3D(10.0f, 0.5f, 11.0f));
+		controlPoints.add(new Point3D(15.0f, 1.0f, 9.0f));
+		controlPoints.add(new Point3D(10.0f, 1.5f, 7.0f));
+		controlPoints.add(new Point3D(5.0f, 1.0f, 5.0f));
 		controlPoints.add(new Point3D(0.0f, 1.0f, 3.0f));
-		controlPoints.add(new Point3D(5.0f, 0.0f, 1.0f));
-		bsplineMotion = new BSplineMotion(controlPoints, 3.0f, 45.0f);
+		controlPoints.add(new Point3D(15.0f, 1.0f, 1.0f));
+		controlPoints.add(new Point3D(7.0f, 1.0f, -1.0f));
+		controlPoints.add(new Point3D(0.0f, 1.0f, -1.0f));
+		bsplineMotion = new BSplineMotion(controlPoints, 5.0f, 20.0f);
 
 		BoxGraphic.create();
 		SphereGraphic.create();
