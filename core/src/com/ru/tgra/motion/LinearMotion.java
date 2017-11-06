@@ -2,7 +2,7 @@ package com.ru.tgra.motion;
 
 import com.ru.tgra.utils.Point3D;
 
-public class LinearMotion {
+public class LinearMotion implements Motion{
 	private Point3D p1;
 	private Point3D p2;
 	private float startTime;

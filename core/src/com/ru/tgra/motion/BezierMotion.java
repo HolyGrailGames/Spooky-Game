@@ -2,7 +2,7 @@ package com.ru.tgra.motion;
 
 import com.ru.tgra.utils.Point3D;
 
-public class BezierMotion {
+public class BezierMotion implements Motion{
 	private Point3D p1;
 	private Point3D p2;
 

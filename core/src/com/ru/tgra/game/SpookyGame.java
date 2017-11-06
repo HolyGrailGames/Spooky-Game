@@ -17,6 +17,7 @@ import com.ru.tgra.managers.InputManager;
 import com.ru.tgra.motion.BSplineMotion;
 import com.ru.tgra.motion.BezierMotion;
 import com.ru.tgra.motion.LinearMotion;
+import com.ru.tgra.motion.Motion;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -31,8 +32,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	private static Texture groundTexture1;
 	private static Texture alphaTex;
 	
-	//BezierMotion bezierMotion; 
-	BSplineMotion bsplineMotion;
+	Motion bsplineMotion;
+	Motion motion;
 	
 	float currentTime;
 	boolean firstFrame = true;
@@ -63,7 +64,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		
 		
-		/*bezierMotion = new BezierMotion(new Point3D(0.0f, 0.0f, -1.0f),
+		/*motion = new BezierMotion(new Point3D(0.0f, 0.0f, -1.0f),
 										new Point3D(7.0f, 0.0f, 3.0f), 
 										new Point3D(3.0f, 0.0f, 5.0f), 
 										new Point3D(5.0f, 0.0f, 1.0f), 3.0f, 15.0f);

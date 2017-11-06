@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Vector3D;
 
-public class BSplineMotion {
+public class BSplineMotion implements Motion {
 	private ArrayList<BezierMotion> motions;
 	
 	private Point3D pStart;
 	private Point3D pEnd;
-	
+
 	private float startTime;
 	private float endTime;
 	
