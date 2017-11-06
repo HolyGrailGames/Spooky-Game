@@ -162,6 +162,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 	public void display()
 	{
+		/*
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE); // cull face
+		Gdx.gl.glCullFace(GL20.GL_BACK); // cull back face
+		Gdx.gl.glFrontFace(GL20.GL_CCW); // GL_CCW for counter clock-wise
+		*/
+		
 		ModelMatrix.main.loadIdentityMatrix();
 		Gdx.graphics.setTitle("SpookyGame | FPS: " + Gdx.graphics.getFramesPerSecond());
 		//do all actual drawing and rendering here
@@ -205,6 +211,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		
 		ModelMatrix.main.popMatrix();
+		
 		/*
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(0.0f, 0.01f, 0.0f);
@@ -212,6 +219,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		NewPlaneGraphic.drawOutlinePlane(shader, null, null);
 		ModelMatrix.main.popMatrix();
 		*/
+		
 		ModelMatrix.main.pushMatrix();
 		shader.setMaterialDiffuse(1, 1, 0, 1);
 		ModelMatrix.main.addTranslation(-0.5f, 0.0f, 0.5f);

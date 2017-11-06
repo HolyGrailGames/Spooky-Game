@@ -8,6 +8,7 @@ import com.ru.tgra.graphics.Shader;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.Random;
 
 public class NewPlaneGraphic {
 
@@ -16,9 +17,11 @@ public class NewPlaneGraphic {
 	private static FloatBuffer uvBuffer;
 	private static ShortBuffer indexBuffer;
 
-	static final int SIZE_PER_SIDE = 128;
+	static final int SIZE_PER_SIDE = 64;
 	static final float MIN_POSITION = -0.5f;
 	static final float POSITION_RANGE = 1f;
+	
+	private static Random rand = new Random();
 
 	static int indexCount;
 
@@ -41,7 +44,7 @@ public class NewPlaneGraphic {
 			for (int x = 0; x <= width; x++) {
 				final float xRatio = x / (float) (width);
 
-				// Build our heightmap from the top down, so that our triangles are
+				// Build our plane from the top down, so that our triangles are
 				// counter-clockwise.
 				final float zRatio = 1f - (z / (float) (height));
 				
@@ -51,8 +54,6 @@ public class NewPlaneGraphic {
 				final float xPosition = MIN_POSITION + (xRatio * POSITION_RANGE);
 				final float zPosition = MIN_POSITION + (zRatio * POSITION_RANGE);
 				
-				System.out.println(u + " " + (v-1.0f));
-
 				// Position
 				vertexArray[offset++] = xPosition;
 				vertexArray[offset++] = 0.0f;
@@ -60,7 +61,7 @@ public class NewPlaneGraphic {
 				
 				// UV
 				uvArray[uvOffset++] = u;
-				uvArray[uvOffset++] = v-1.0f;
+				uvArray[uvOffset++] = 1-v;
 				
 				// Normal
 				normalArray[normalOffset++] = 0.0f;
@@ -92,53 +93,20 @@ public class NewPlaneGraphic {
 		System.out.println("calc -> " + ((verticesPerStrip * numStripsRequired) + numDegensRequired));
 
 		offset = 0;
-		for (int y = 0; y < height; y++) {
-			/*
-			if (y > 0) {
-				// Degenerate begin: repeat first vertex
-				indexArray[offset++] = (short) (y * height);
-			}
-			*/
-			indexArray[offset++] = (short) ((y+0) * (width-1) + 0);
-			System.out.println(((y+0) * (width-1) + 0));
-			if (((y+0) * (width-1) + 0) != 2) {
-				System.out.println("first");
-			}
-
+		for (int z = 0; z < height; z++) {
+			// Degenerate first index
+			indexArray[offset++] = (short) ((z) * (width) + z);
+			System.out.println("start: "+((z) * (width) + z));
 			for (int x = 0; x < width+1; x++){
-				/*
 				// One part of the strip
-				indexArray[offset++] = (short) ((y * height) + x);
-				indexArray[offset++] = (short) (((y + 1) * height) + x);
-				*/
-				indexArray[offset++] = (short)((y+0) * (width+1) + x);
-				indexArray[offset++] = (short)((y+1) * (width+1) + x);
-				
-				System.out.println(((y+0) * (width+1) + x));
-				if (((y+0) * (width+1) + x) == 2) {
-					System.out.println("second");
-				}
-				System.out.println(((y+1) * (width+1) + x));
-				if (((y+1) * (width+1) + x) == 2) {
-					System.out.println("third");
-				}
+				indexArray[offset++] = (short)((z+0) * (width+1) + x);
+				indexArray[offset++] = (short)((z+1) * (width+1) + x);
 			}
-
-			/*
-			if (y < height - 2) {
-				// Degenerate end: repeat last vertex
-				indexArray[offset++] = (short) (((y + 1) * height) + (width - 1));
-			}
-			*/
-			indexArray[offset++] = (short)((y+0) * (width+1) + width+1);
-			System.out.println(((y+0) * (width+1) + width+1));
-			if (((y+0) * (width+1) + width+1) == 2) {
-				System.out.println("fourth");
-			}
+			// Degenerate last index
+			indexArray[offset++] = (short)((z+1) * (width+1) + (width));
+			System.out.println("end: "+((z+1) * (width+1) + (width)));
 		}
 		
-		System.out.println("offset -> " + offset);
-
 		indexCount = indexArray.length;
 
 		indexBuffer = BufferUtils.newShortBuffer(indexCount);
@@ -150,12 +118,6 @@ public class NewPlaneGraphic {
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTexture);
 		
-		/*
-		Gdx.gl.glEnable(GL20.GL_CULL_FACE); // cull face
-		Gdx.gl.glCullFace(GL20.GL_BACK); // cull back face
-		Gdx.gl.glFrontFace(GL20.GL_CCW); // GL_CCW for counter clock-wise
-		*/
-
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
@@ -171,7 +133,7 @@ public class NewPlaneGraphic {
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
 		
-		Gdx.gl.glLineWidth(5f);
+		//Gdx.gl.glLineWidth(5f);
 
 		Gdx.gl.glDrawElements(GL20.GL_LINE_STRIP, indexCount, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
