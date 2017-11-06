@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.utils.OpenSimplexNoise;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -17,15 +18,19 @@ public class NewPlaneGraphic {
 	private static FloatBuffer uvBuffer;
 	private static ShortBuffer indexBuffer;
 
-	static final int SIZE_PER_SIDE = 64;
+	static final int SIZE_PER_SIDE = 8; // MAX allowed value is 256
 	static final float MIN_POSITION = -0.5f;
 	static final float POSITION_RANGE = 1f;
 	
 	private static Random rand = new Random();
 
 	static int indexCount;
+	
+	public NewPlaneGraphic(OpenSimplexNoise noise) {
+		create(noise);
+	}
 
-	public static void create() {
+	public void create(OpenSimplexNoise noise) {
 		final int width = SIZE_PER_SIDE;
 		final int height = SIZE_PER_SIDE;
 
@@ -56,7 +61,7 @@ public class NewPlaneGraphic {
 				
 				// Position
 				vertexArray[offset++] = xPosition;
-				vertexArray[offset++] = 0.0f;
+				vertexArray[offset++] = (float)noise.eval(xPosition, zPosition);
 				vertexArray[offset++] = zPosition;
 				
 				// UV
@@ -89,14 +94,11 @@ public class NewPlaneGraphic {
 		final int verticesPerStrip = 2 * width;
 
 		final short[] indexArray = new short[(verticesPerStrip * numStripsRequired) + numDegensRequired];
-		
-		System.out.println("calc -> " + ((verticesPerStrip * numStripsRequired) + numDegensRequired));
 
 		offset = 0;
 		for (int z = 0; z < height; z++) {
 			// Degenerate first index
 			indexArray[offset++] = (short) ((z) * (width) + z);
-			System.out.println("start: "+((z) * (width) + z));
 			for (int x = 0; x < width+1; x++){
 				// One part of the strip
 				indexArray[offset++] = (short)((z+0) * (width+1) + x);
@@ -104,7 +106,6 @@ public class NewPlaneGraphic {
 			}
 			// Degenerate last index
 			indexArray[offset++] = (short)((z+1) * (width+1) + (width));
-			System.out.println("end: "+((z+1) * (width+1) + (width)));
 		}
 		
 		indexCount = indexArray.length;
@@ -114,10 +115,14 @@ public class NewPlaneGraphic {
 		indexBuffer.rewind();
 	}
 
-	public static void drawSolidPlane(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
+	public void drawSolidPlane(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTexture);
-		
+		/*
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE); // cull face
+		Gdx.gl.glCullFace(GL20.GL_BACK); // cull back face
+		Gdx.gl.glFrontFace(GL20.GL_CCW); // GL_CCW for counter clock-wise
+		*/
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
@@ -125,7 +130,7 @@ public class NewPlaneGraphic {
 		Gdx.gl.glDrawElements(GL20.GL_TRIANGLE_STRIP, indexCount, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 	
-	public static void drawOutlinePlane(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
+	public void drawOutlinePlane(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
 		shader.setDiffuseTexture(diffuseTexture);
 		shader.setAlphaTexture(alphaTexture);
 		

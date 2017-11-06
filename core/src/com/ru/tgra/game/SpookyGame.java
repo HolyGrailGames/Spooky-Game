@@ -18,6 +18,7 @@ import com.ru.tgra.motion.BSplineMotion;
 import com.ru.tgra.motion.BezierMotion;
 import com.ru.tgra.motion.LinearMotion;
 import com.ru.tgra.motion.Motion;
+import com.ru.tgra.objects.Floor;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -41,6 +42,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	Random rand = new Random();
 
 	public static Player player;
+	private Floor floor;
 	
 	float yaw = 0;
 
@@ -58,6 +60,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
 		alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex2.png"));
+		Gdx.gl.glGenerateMipmap(GL20.GL_TEXTURE_2D);
+		Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MIN_FILTER, GL20.GL_LINEAR_MIPMAP_NEAREST);
 
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 		model.setPosition(new Point3D(0.0f, 2.0f, -1.0f));
@@ -92,7 +96,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		BoxGraphic.create();
 		SphereGraphic.create();
 		PlaneGraphic.create();
-		NewPlaneGraphic.create();
+		//NewPlaneGraphic.create();
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
@@ -113,11 +117,11 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 
 		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,-1));
-		/*
+		
 		floor = new Floor(
 				new Point3D(2, 0, 2), new Vector3D(Settings.GROUND_WIDTH, 1.0f, Settings.GROUND_HEIGHT),
 				Settings.TEST_MATERIAL, groundTexture1);
-		
+		/*
 		tile = new Tile(new Point3D(3,1,3), new Vector3D(1,1,1), Settings.TEST_MATERIAL, groundTexture1);
 		*/
 
@@ -165,7 +169,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		/*
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE); // cull face
 		Gdx.gl.glCullFace(GL20.GL_BACK); // cull back face
-		Gdx.gl.glFrontFace(GL20.GL_CCW); // GL_CCW for counter clock-wise
+		Gdx.gl.glFrontFace(GL20.GL_CW); // GL_CCW for counter clock-wise
 		*/
 		
 		ModelMatrix.main.loadIdentityMatrix();
@@ -193,6 +197,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		/*** PLANE ***/
 		drawGround();
+		floor.display(shader);
 		//tile.display(shader);
 	}
 
@@ -202,15 +207,14 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	{
 		shader.setMaterial(Settings.TEST_MATERIAL);
 
-
+		/*
 		// Draw the floor of the maze.
 		ModelMatrix.main.pushMatrix();
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		//PlaneGraphic.drawSolidPlane(shader, groundTexture1, null);
 		NewPlaneGraphic.drawSolidPlane(shader, groundTexture1, null);
-		
-		
 		ModelMatrix.main.popMatrix();
+		*/
 		
 		/*
 		ModelMatrix.main.pushMatrix();
@@ -219,6 +223,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		NewPlaneGraphic.drawOutlinePlane(shader, null, null);
 		ModelMatrix.main.popMatrix();
 		*/
+		
 		
 		ModelMatrix.main.pushMatrix();
 		shader.setMaterialDiffuse(1, 1, 0, 1);
