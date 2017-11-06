@@ -13,6 +13,8 @@ import com.ru.tgra.graphics.shapes.*;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
 import com.ru.tgra.managers.InputManager;
+import com.ru.tgra.motion.BezierMotion;
+import com.ru.tgra.motion.LinearMotion;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -26,16 +28,16 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	private static Texture tex;
 	private static Texture groundTexture1;
 	private static Texture alphaTex;
+	
+	BezierMotion bezierMotion; 
+	float currentTime;
+	boolean firstFrame = true;
 
 	Random rand = new Random();
 
 	public static Player player;
 	
 	float yaw = 0;
-
-	//private Floor floor;
-
-	//private Tile tile;
 
 	@Override
 	public void create () {
@@ -53,6 +55,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex2.png"));
 
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
+		model.setPosition(new Point3D(0.0f, 0.0f, -1.0f));
+		bezierMotion = new BezierMotion(new Point3D(0.0f, 0.0f, -1.0f),
+										new Point3D(7.0f, 0.0f, 3.0f), 
+										new Point3D(3.0f, 0.0f, 5.0f), 
+										new Point3D(5.0f, 0.0f, 1.0f), 3.0f, 15.0f);
+		
 
 		BoxGraphic.create();
 		SphereGraphic.create();
@@ -106,9 +114,22 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	public void update()
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
+		
 		yaw += player.yaw;
 		player.update(deltaTime);
-
+		
+		
+			
+		if (firstFrame)
+		{
+			currentTime = 0.0f;
+			firstFrame = false;
+		}
+		else {
+			currentTime += deltaTime;
+		}
+		
+		bezierMotion.getCurrentPosition(currentTime, model.getPosition());
 	}
 
 	public void display()
@@ -128,13 +149,14 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		/*** LIGHTS ***/
 		//shader.setLight(light);
 		
-		/*** MODEL ***//*
+		/*** MODEL ***/
 		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
+		ModelMatrix.main.addTranslation(model.getPosition().x, model.getPosition().y, model.getPosition().z);
+		ModelMatrix.main.addScale(0.2f, 0.2f, 0.2f);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		model.draw(shader, tex);
 		ModelMatrix.main.popMatrix();
-*/
+
 		/*** PLANE ***/
 		drawGround();
 		//tile.display(shader);

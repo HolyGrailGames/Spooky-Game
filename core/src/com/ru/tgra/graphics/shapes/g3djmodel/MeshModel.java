@@ -8,19 +8,34 @@ import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.graphics.Material;
 import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.utils.Point3D;
 
 public class MeshModel {
 	public Vector<Mesh> meshes;
 	public Vector<MeshPart> parts;
 	public Vector<Material> materials;
 	public Vector<MeshModelNode> nodes;
+	Point3D position;
 
 	public MeshModel()
 	{
+		position = new Point3D();
 		meshes = new Vector<Mesh>();
 		parts = new Vector<MeshPart>();
 		materials = new Vector<Material>();
 		nodes = new Vector<MeshModelNode>();
+	}
+	
+	public void setPosition(Point3D position)
+	{
+		this.position.x = position.x;
+		this.position.y = position.y;
+		this.position.z = position.z;
+	}
+	
+	public Point3D getPosition()
+	{
+		return this.position;
 	}
 
 	public void draw(Shader shader, Texture diffuseTexture) {
