@@ -8,8 +8,8 @@ public class BezierMotion {
 
 	private Point3D p3;
 	private Point3D p4;
-	private float startTime;
-	private float endTime;
+	float startTime;
+	float endTime;
 	
 	
 	public BezierMotion(Point3D p1, Point3D p2, Point3D p3, Point3D p4, float startTime, float endTime)

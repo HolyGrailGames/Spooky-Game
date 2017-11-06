@@ -1,5 +1,6 @@
 package com.ru.tgra.game;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -13,6 +14,7 @@ import com.ru.tgra.graphics.shapes.*;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
 import com.ru.tgra.managers.InputManager;
+import com.ru.tgra.motion.BSplineMotion;
 import com.ru.tgra.motion.BezierMotion;
 import com.ru.tgra.motion.LinearMotion;
 import com.ru.tgra.utils.Point3D;
@@ -29,7 +31,9 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	private static Texture groundTexture1;
 	private static Texture alphaTex;
 	
-	BezierMotion bezierMotion; 
+	//BezierMotion bezierMotion; 
+	BSplineMotion bsplineMotion;
+	
 	float currentTime;
 	boolean firstFrame = true;
 
@@ -56,11 +60,33 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 		model.setPosition(new Point3D(0.0f, 0.0f, -1.0f));
-		bezierMotion = new BezierMotion(new Point3D(0.0f, 0.0f, -1.0f),
+		
+		
+		
+		/*bezierMotion = new BezierMotion(new Point3D(0.0f, 0.0f, -1.0f),
 										new Point3D(7.0f, 0.0f, 3.0f), 
 										new Point3D(3.0f, 0.0f, 5.0f), 
 										new Point3D(5.0f, 0.0f, 1.0f), 3.0f, 15.0f);
 		
+		*/
+		ArrayList<Point3D> controlPoints = new ArrayList<Point3D>();
+		controlPoints.add(new Point3D(0.0f, 0.0f, -1.0f));
+		controlPoints.add(new Point3D(15.0f, 0.0f, 3.0f));
+		controlPoints.add(new Point3D(0.0f, 0.0f, -2.0f));
+		controlPoints.add(new Point3D(3.0f, 2.0f, -1.0f));
+		controlPoints.add(new Point3D(6.0f, 0.0f, -1.0f));
+		controlPoints.add(new Point3D(6.0f, 7.0f, 1.0f));
+		controlPoints.add(new Point3D(4.0f, 0.0f, 5.0f));
+		controlPoints.add(new Point3D(0.0f, -1.0f, -3.0f));
+		controlPoints.add(new Point3D(2.0f, 3.0f, -7.0f));
+		controlPoints.add(new Point3D(0.0f, 0.0f, -2.0f));
+		controlPoints.add(new Point3D(1.0f, 1.0f, -4.0f));
+		controlPoints.add(new Point3D(0.0f, 3.0f, -5.0f));
+		controlPoints.add(new Point3D(3.0f, 2.0f, 1.0f));
+		controlPoints.add(new Point3D(0.0f, 0.0f, -2.0f));
+		controlPoints.add(new Point3D(0.0f, 1.0f, 3.0f));
+		controlPoints.add(new Point3D(5.0f, 0.0f, 1.0f));
+		bsplineMotion = new BSplineMotion(controlPoints, 3.0f, 45.0f);
 
 		BoxGraphic.create();
 		SphereGraphic.create();
@@ -129,7 +155,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 			currentTime += deltaTime;
 		}
 		
-		bezierMotion.getCurrentPosition(currentTime, model.getPosition());
+		//bezierMotion.getCurrentPosition(currentTime, model.getPosition());
+		bsplineMotion.getCurrentPosition(currentTime, model.getPosition());
 	}
 
 	public void display()
