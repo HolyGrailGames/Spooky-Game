@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.graphics.Material;
 import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.utils.OpenSimplexNoise;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -13,6 +14,7 @@ import com.ru.tgra.utils.Vector3D;
 public class Floor extends GameObject {
 
 	ArrayList<Tile> tiles;
+	private OpenSimplexNoise noise = new OpenSimplexNoise();
 
 	public Floor(Point3D position, Vector3D scale, Material material, Texture tex) {
 		super(position, null, scale, material, tex);
@@ -26,7 +28,7 @@ public class Floor extends GameObject {
 	private ArrayList<Tile> subdivide(int numDivisionsLeft, String direction, float Px, float Pz, float Sx, float Sz) {
 		if (numDivisionsLeft == 0) {
 			ArrayList<Tile> list =  new ArrayList<Tile>();
-			list.add(new Tile(new Point3D(Px, position.y, Pz), new Vector3D(Sx, scale.y, Sz), null, tex));
+			list.add(new Tile(new Point3D(Px, position.y, Pz), new Vector3D(Sx, scale.y, Sz), null, tex, noise));
 			return list;
 		}
 		else if (direction == Settings.HORIZONTAL) {

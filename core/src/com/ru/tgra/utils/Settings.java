@@ -9,12 +9,12 @@ public class Settings {
 	public static final float WALK_SPEED = 1.0f;
 
 	/*** FOG ***/
-	public static final float FOG_START = 0.0f;
+	public static final float FOG_START = -10.0f;
 	public static final float FOG_END = 10.0f;
 	public static final Color FOG_COLOR = new Color(0.3f, 0.3f, 0.3f, 1.0f);
 
 	/*** PLANE CALCULATIONS ***/
-	public static final int SUBDIVISIONS = 8;
+	public static final int SUBDIVISIONS = 6;
 	public static final String HORIZONTAL = "HORIZONTAL";
 	public static final String VERTICAL = "VERTICAL";
 	public static final float GROUND_WIDTH = 25.0f;
