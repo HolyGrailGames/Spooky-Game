@@ -50,6 +50,11 @@ public class InputManager {
 			Gdx.app.exit();
 		}
 		
+		if(Gdx.input.isKeyJustPressed(Input.Keys.P))
+		{
+			GameManager.wireframe = !GameManager.wireframe;
+		}
+		
 		/*
 		if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
 			player.toggleFlashlight();

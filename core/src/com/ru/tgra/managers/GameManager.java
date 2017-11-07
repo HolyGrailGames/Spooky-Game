@@ -13,6 +13,7 @@ import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Utilities;
 
 public class GameManager {
+	public static boolean wireframe = false;
 	public static Texture alphaTex = new Texture(Gdx.files.internal("textures/flamealphatex.png"));
 	public static Texture flameTex = new Texture(Gdx.files.internal("textures/flametex01.png"));
 	

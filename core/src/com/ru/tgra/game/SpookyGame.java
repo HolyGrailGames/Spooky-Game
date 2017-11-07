@@ -23,6 +23,7 @@ import com.ru.tgra.motion.Motion;
 import com.ru.tgra.objects.Firefly;
 import com.ru.tgra.objects.Terrain;
 import com.ru.tgra.objects.Tile;
+import com.ru.tgra.utils.NoiseAlgorithm;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -85,7 +86,15 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 
 		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,1));
-		terrain = new Terrain(new Point3D(0,0,0), Settings.TERRAIN_SIZE, Settings.TERRAIN_TILE_SIZE, groundTexture1);
+		
+		float startY = Settings.TERRAIN_SCALE;
+		
+		if (Settings.NOISE_ALG == NoiseAlgorithm.DIAMOND_SQUARE) {
+			startY = Settings.TERRAIN_DSQUARE_RANGE*Settings.TERRAIN_DSQUARE_SCALE;
+		}
+
+		terrain = new Terrain(new Point3D(0,startY,0), groundTexture1, Settings.NOISE_ALG);
+		
 	}
 
 	@Override
