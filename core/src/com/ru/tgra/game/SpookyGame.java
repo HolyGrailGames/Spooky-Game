@@ -108,7 +108,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,1));
 		
-		terrain = new Terrain(new Point3D(0,0,0), Settings.TERRAIN_SIZE, Settings.TERRAIN_TILE_SIZE, groundTexture1);
+		terrain = new Terrain(new Point3D(0,0,0), groundTexture1, Settings.NOISE_ALG);
 		
 	}
 

@@ -6,6 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.utils.DiamondSquare;
+import com.ru.tgra.utils.NoiseAlgorithm;
 import com.ru.tgra.utils.OpenSimplexNoise;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
@@ -21,25 +23,74 @@ public class Terrain {
 	private int tileEdgeCount;
 	public static int totalSize;
 	private OpenSimplexNoise noise;
+	private DiamondSquare dSq;
 	private Texture tex;
 	
 	// Size is the number of tiles
 	// tileEdgeCount is the number of edges on one tile
-	public Terrain(Point3D position, int size, int tileEdgeCount, Texture tex) {
+	/*
+	public Terrain(Point3D position, Texture tex, NoiseAlgorithm alg) {
 		this.position = position;
-		this.size = size;
-		this.tileEdgeCount = tileEdgeCount;
-		this.totalSize = (size*tileEdgeCount)+1;
-		yValues = new float[totalSize][totalSize];
-		this.tiles = new ArrayList<Tile>();
-		this.noise = new OpenSimplexNoise(System.currentTimeMillis());
 		this.tex = tex;
+		this.tiles = new ArrayList<Tile>();
 		
-		generateNoise();
+		// Generate y values with a noise algorithm
+		if (alg == NoiseAlgorithm.SIMPLEX_NOISE) {
+			System.out.println("Generating Terrain with Simplex Noise...");
+			this.size = Settings.TERRAIN_SIZE;
+			this.noise = new OpenSimplexNoise(System.currentTimeMillis());
+			generateSimplexNoise((Settings.TERRAIN_SIZE*Settings.TERRAIN_TILE_SIZE)+1);
+		}
+		else if (alg == NoiseAlgorithm.DIAMOND_SQUARE) {
+			System.out.println("Generating Terrain with Diamond Square...");
+			this.size = Settings.TERRAIN_DSQUARE_SIZE;
+			this.dSq = new DiamondSquare((Settings.TERRAIN_DSQUARE_SIZE*Settings.TERRAIN_DSQUARE_TILE_SIZE)+1,
+					Settings.TERRAIN_DSQUARE_CORNER_HEIGHT, 1.0f,
+					System.currentTimeMillis());
+			generateDiamondSquareNoise();
+		}
+		
+		// Create the tiles of the terrain
+		create();
+	}
+	*/
+	
+	// Size is the number of tiles
+	// tileEdgeCount is the number of edges on one tile
+	public Terrain(Point3D position, Texture tex, NoiseAlgorithm alg) {
+		this.position = position;
+		this.tex = tex;
+		this.tiles = new ArrayList<Tile>();
+		
+		if (alg == NoiseAlgorithm.OPEN_SIMPLEX_NOISE) {
+			System.out.println("Generating Terrain with Open Simplex Noise...");
+			
+			this.size = Settings.TERRAIN_SIZE;
+			this.tileEdgeCount = Settings.TERRAIN_TILE_SIZE;
+			totalSize = (Settings.TERRAIN_SIZE*Settings.TERRAIN_TILE_SIZE)+1;
+			yValues = new float[totalSize][totalSize];
+			
+			this.noise = new OpenSimplexNoise(System.currentTimeMillis());
+			generateNoise();
+		}
+		else if (alg == NoiseAlgorithm.DIAMOND_SQUARE) {
+			System.out.println("Generating Terrain with Diamond Square...");
+			
+			this.size = Settings.TERRAIN_DSQUARE_SIZE;
+			this.tileEdgeCount = Settings.TERRAIN_DSQUARE_TILE_SIZE;
+			totalSize = (Settings.TERRAIN_DSQUARE_SIZE*Settings.TERRAIN_DSQUARE_TILE_SIZE)+1;
+			
+			this.dSq = new DiamondSquare((Settings.TERRAIN_DSQUARE_SIZE*Settings.TERRAIN_DSQUARE_TILE_SIZE)+1,
+					Settings.TERRAIN_DSQUARE_CORNER_HEIGHT, Settings.TERRAIN_DSQUARE_RANGE,
+					System.currentTimeMillis());
+			generateDiamondSquareNoise();
+		}
+		
 		create();
 	}
 	
 	private void generateNoise() {
+		yValues = new float[totalSize][totalSize];
 		float zOff = 0;
 		for(int z = 0; z < totalSize; z++) {
 			float xOff = 0;
@@ -49,6 +100,10 @@ public class Terrain {
 			}
 			zOff+=Settings.TERRAIN_STEEPNESS;
 		}
+	}
+	
+	private void generateDiamondSquareNoise() {
+		yValues = this.dSq.generateNoise();
 	}
 	
 	private void create() {
