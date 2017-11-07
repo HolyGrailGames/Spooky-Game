@@ -51,7 +51,6 @@ public class Player {
 	}
 
 	public void display(Shader shader) {
-		
 		flashlight.display(shader);
 	}
 

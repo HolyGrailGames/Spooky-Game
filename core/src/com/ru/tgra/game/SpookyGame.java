@@ -14,11 +14,13 @@ import com.ru.tgra.graphics.*;
 import com.ru.tgra.graphics.shapes.*;
 import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
+import com.ru.tgra.managers.GameManager;
 import com.ru.tgra.managers.InputManager;
 import com.ru.tgra.motion.BSplineMotion;
 import com.ru.tgra.motion.BezierMotion;
 import com.ru.tgra.motion.LinearMotion;
 import com.ru.tgra.motion.Motion;
+import com.ru.tgra.objects.Firefly;
 import com.ru.tgra.objects.Terrain;
 import com.ru.tgra.objects.Tile;
 import com.ru.tgra.utils.Point3D;
@@ -33,13 +35,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 	private static Texture tex;
 	private static Texture groundTexture1;
-	private static Texture alphaTex;
-	private static Texture flameTex;
 	
 	Motion bsplineMotion;
 	Motion motion;
 	
-	ParticleEffect effect;
+	List<Firefly> fireflies;
+	//Firefly firefly;
 	
 	float currentTime;
 	boolean firstFrame = true;
@@ -63,8 +64,6 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		shader = new Shader();
 		
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
-		alphaTex = new Texture(Gdx.files.internal("textures/flamealphatex.png"));
-		flameTex= new Texture(Gdx.files.internal("textures/flametex01.png"));
 		
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 		Gdx.gl.glGenerateMipmap(GL20.GL_TEXTURE_2D);
@@ -73,16 +72,10 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 		model.setPosition(new Point3D(0.0f, 2.0f, -1.0f));
 		
-		effect = new ParticleEffect(new Point3D(5f, 2f, 5f), 30.0f, 3.0f, flameTex, alphaTex);
+		fireflies = GameManager.initializeFireflies(1);
+		//firefly = new Firefly(new Point3D(5f, 2f, 5f), 0.2f, GameManager.flameTex, GameManager.alphaTex);
 		
 		
-		/*motion = new BezierMotion(new Point3D(0.0f, 0.0f, -1.0f),
-										new Point3D(7.0f, 0.0f, 3.0f), 
-										new Point3D(3.0f, 0.0f, 5.0f), 
-										new Point3D(5.0f, 0.0f, 1.0f), 3.0f, 15.0f);
-										
-		
-		*/
 		ArrayList<Point3D> controlPoints = new ArrayList<Point3D>();
 		controlPoints.add(new Point3D(0.0f, 1.0f, -1.0f));
 		controlPoints.add(new Point3D(5.0f, 1.5f, 3.0f));
@@ -111,18 +104,6 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		ModelMatrix.main.loadIdentityMatrix();
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());;
 
-
-		//TODO: try this way to create a texture image
-		/*Pixmap pm = new Pixmap(128, 128, Format.RGBA8888);
-		for(int i = 0; i < pm.getWidth(); i++)
-		{
-			for(int j = 0; j < pm.getWidth(); j++)
-			{
-				pm.drawPixel(i, j, rand.nextInt());
-			}
-		}
-		tex = new Texture(pm);*/
-
 		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 
 		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,1));
@@ -133,12 +114,9 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public void render () {
-
 		input();
-		//put the code inside the update and display methods, depending on the nature of the code
 		update();
 		display();
-
 	}
 
 	public void input()
@@ -153,7 +131,14 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		yaw += player.yaw;
 		player.update(deltaTime);
 		
-		effect.update(deltaTime);
+		
+		
+		for (Firefly firefly : fireflies)
+		{
+			firefly.update(deltaTime);			
+		}
+		
+		
 			
 		if (firstFrame)
 		{
@@ -164,24 +149,33 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 			currentTime += deltaTime;
 		}
 		
-		//bezierMotion.getCurrentPosition(currentTime, model.getPosition());
-		bsplineMotion.getCurrentPosition(currentTime, model.getPosition());
+		
+		for (Firefly firefly : fireflies)
+		{
+			bsplineMotion.getCurrentPosition(currentTime, firefly.getPosition());	
+		}
+		
 	}
 
 	public void display()
 	{
+		Gdx.graphics.setTitle("SpookyGame | FPS: " + Gdx.graphics.getFramesPerSecond());
+		
+
 		/*
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE); // cull face
 		Gdx.gl.glCullFace(GL20.GL_BACK); // cull back face
 		Gdx.gl.glFrontFace(GL20.GL_CW); // GL_CCW for counter clock-wise
 		*/
 		
-		ModelMatrix.main.loadIdentityMatrix();
-		Gdx.graphics.setTitle("SpookyGame | FPS: " + Gdx.graphics.getFramesPerSecond());
+		//ModelMatrix.main.loadIdentityMatrix();
+		
 		//do all actual drawing and rendering here
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
 		player.cam.display(shader);
+
+		
 		shader.setMaterial(Settings.TEST_MATERIAL);
 		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 		
@@ -190,23 +184,14 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		/*** LIGHTS ***/
 		//shader.setLight(light);
 		
-		/*** MODEL ***/
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(model.getPosition().x, model.getPosition().y, model.getPosition().z);
-		ModelMatrix.main.addScale(0.2f, 0.2f, 0.2f);
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		model.draw(shader, tex);
-		ModelMatrix.main.popMatrix();
+		/*** FIREFLIES ***/
+		for (Firefly firefly : fireflies)
+		{
+			firefly.draw(shader);
+		}
 
 		/*** TERRAIN ***/
 		terrain.display(shader);
-		
-		
-		/*** PARTICLES ***/
-		ModelMatrix.main.pushMatrix();
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		effect.draw(shader);
-		ModelMatrix.main.popMatrix();
 	}
 
 	@Override

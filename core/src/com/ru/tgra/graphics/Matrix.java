@@ -177,6 +177,13 @@ public class Matrix {
 	{
 		return matrix;
 	}
-
-
+	
+	public void printMAtrix()
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			System.out.print(matrix.get(i) + " ");
+		}
+		System.out.println();
+	}
 }
