@@ -60,7 +60,7 @@ public class GameManager {
 		
 		
 		
-		BSplineMotion curve = new BSplineMotion(controlPoints, rand.nextInt(5), 60f);
+		BSplineMotion curve = new BSplineMotion(controlPoints, (rand.nextFloat() * 10), 60f);
 		
 		return curve;
 	}
