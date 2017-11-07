@@ -44,20 +44,20 @@ public class Firefly
 		
 		shader.setMaterialDiffuse(0,  0,  0,  alpha);
 		
-		//ModelMatrix.main.loadIdentityMatrix();
+		// Draw one sprite without rotation
 		ModelMatrix.main.pushMatrix();
-		
 		ModelMatrix.main.addTranslation(position.x, position.y, position.z);
-		
 		ModelMatrix.main.addScale(size,  size,  size);
 		
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SpriteGraphic.drawSprite(shader, emissionTexture, alphaTexture);
 		
+		// Rotate around the y axis and draw another sprite
 		ModelMatrix.main.addRotationY(90.0f);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SpriteGraphic.drawSprite(shader, emissionTexture, alphaTexture);
 
+		// Rotate around the x axis and draw the final sprite
 		ModelMatrix.main.addRotationX(90.0f);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SpriteGraphic.drawSprite(shader, emissionTexture, alphaTexture);

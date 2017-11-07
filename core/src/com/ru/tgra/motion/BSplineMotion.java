@@ -6,23 +6,20 @@ import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Vector3D;
 
 public class BSplineMotion implements Motion {
-	private ArrayList<BezierMotion> motions;
-	private ArrayList<BezierMotion> reverseMotions;
-	
 	private Point3D pStart;
 	private Point3D pEnd;
 
 	private float startTime;
 	private float endTime;
-	private float totalTime;
 	private float timePerMotion;
 	
 	private int motionCount;
 	
 	private ArrayList<Point3D> controlPoints;
 	private ArrayList<Point3D> reverseControlPoints;
+	private ArrayList<BezierMotion> motions;
 	
-	boolean forward = true;
+	private boolean forward = true;
 	
 	public BSplineMotion(ArrayList<Point3D> controlPoints, float startTime, float endTime)
 	{
@@ -34,7 +31,6 @@ public class BSplineMotion implements Motion {
 		
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.totalTime = endTime - startTime;
 		this.motionCount = (controlPoints.size() / 2) - 1;
 		this.timePerMotion = (endTime - startTime) / (float)motionCount;
 		

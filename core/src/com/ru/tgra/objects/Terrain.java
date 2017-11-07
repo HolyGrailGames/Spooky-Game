@@ -25,35 +25,7 @@ public class Terrain {
 	private OpenSimplexNoise noise;
 	private DiamondSquare dSq;
 	private Texture tex;
-	
-	// Size is the number of tiles
-	// tileEdgeCount is the number of edges on one tile
-	/*
-	public Terrain(Point3D position, Texture tex, NoiseAlgorithm alg) {
-		this.position = position;
-		this.tex = tex;
-		this.tiles = new ArrayList<Tile>();
-		
-		// Generate y values with a noise algorithm
-		if (alg == NoiseAlgorithm.SIMPLEX_NOISE) {
-			System.out.println("Generating Terrain with Simplex Noise...");
-			this.size = Settings.TERRAIN_SIZE;
-			this.noise = new OpenSimplexNoise(System.currentTimeMillis());
-			generateSimplexNoise((Settings.TERRAIN_SIZE*Settings.TERRAIN_TILE_SIZE)+1);
-		}
-		else if (alg == NoiseAlgorithm.DIAMOND_SQUARE) {
-			System.out.println("Generating Terrain with Diamond Square...");
-			this.size = Settings.TERRAIN_DSQUARE_SIZE;
-			this.dSq = new DiamondSquare((Settings.TERRAIN_DSQUARE_SIZE*Settings.TERRAIN_DSQUARE_TILE_SIZE)+1,
-					Settings.TERRAIN_DSQUARE_CORNER_HEIGHT, 1.0f,
-					System.currentTimeMillis());
-			generateDiamondSquareNoise();
-		}
-		
-		// Create the tiles of the terrain
-		create();
-	}
-	*/
+	private NoiseAlgorithm alg;
 	
 	// Size is the number of tiles
 	// tileEdgeCount is the number of edges on one tile
@@ -61,6 +33,7 @@ public class Terrain {
 		this.position = position;
 		this.tex = tex;
 		this.tiles = new ArrayList<Tile>();
+		this.alg = alg;
 		
 		if (alg == NoiseAlgorithm.OPEN_SIMPLEX_NOISE) {
 			System.out.println("Generating Terrain with Open Simplex Noise...");
@@ -124,7 +97,8 @@ public class Terrain {
 	
 	public void display(Shader shader) {
 		ModelMatrix.main.pushMatrix();
-		float s = Settings.TERRAIN_SCALE;
+		float s = (this.alg == NoiseAlgorithm.OPEN_SIMPLEX_NOISE) ? Settings.TERRAIN_SCALE : Settings.TERRAIN_DSQUARE_SCALE;
+		
 		ModelMatrix.main.addScale(s, 1, s);
 		for(Tile tile : tiles) {
 			tile.display(shader);

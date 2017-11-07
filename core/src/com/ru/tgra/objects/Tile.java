@@ -38,7 +38,7 @@ public class Tile extends GameObject {
 		ModelMatrix.main.addTranslation(position.x, position.y, position.z);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		if (GameManager.wireframe) {
-			plane.drawOutlinePlane(shader, null, null);
+			plane.drawOutlinePlane(shader, tex, null);
 		}
 		else {
 			plane.drawSolidPlane(shader, tex, null);
