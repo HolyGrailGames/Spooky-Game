@@ -121,8 +121,7 @@ public class HeightMapGraphic {
 	}
 
 	public static void drawSolidHeightMap(Shader shader) {
-		shader.setDiffuseTexture(null);
-		shader.setAlphaTexture(null);
+		shader.setTextures(null,  null,  null);
 
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);

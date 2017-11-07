@@ -73,8 +73,8 @@ public class MeshModel {
 					//just so it doesn't crash
 					Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, part.part.mesh.normals);					
 				}
-				shader.setDiffuseTexture(diffuseTexture);
-				shader.setAlphaTexture(null);
+				
+				shader.setTextures(diffuseTexture, null, null);
 
 				if(part.part.type.equals("TRIANGLES"))
 				{

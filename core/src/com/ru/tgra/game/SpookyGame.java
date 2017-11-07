@@ -34,9 +34,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	private static Texture tex;
 	private static Texture groundTexture1;
 	private static Texture alphaTex;
+	private static Texture flameTex;
 	
 	Motion bsplineMotion;
 	Motion motion;
+	
+	ParticleEffect effect;
 	
 	float currentTime;
 	boolean firstFrame = true;
@@ -60,14 +63,17 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		shader = new Shader();
 		
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
-		alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
-		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex2.png"));
+		alphaTex = new Texture(Gdx.files.internal("textures/flamealphatex.png"));
+		flameTex= new Texture(Gdx.files.internal("textures/flametex01.png"));
+		
+		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 		Gdx.gl.glGenerateMipmap(GL20.GL_TEXTURE_2D);
 		Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MIN_FILTER, GL20.GL_LINEAR_MIPMAP_NEAREST);
 
 		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
 		model.setPosition(new Point3D(0.0f, 2.0f, -1.0f));
 		
+		effect = new ParticleEffect(new Point3D(5f, 2f, 5f), 30.0f, 3.0f, flameTex, alphaTex);
 		
 		
 		/*motion = new BezierMotion(new Point3D(0.0f, 0.0f, -1.0f),
@@ -99,7 +105,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		BoxGraphic.create();
 		SphereGraphic.create();
 		PlaneGraphic.create();
-
+		SpriteGraphic.create();
+		
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());;
@@ -146,7 +153,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		yaw += player.yaw;
 		player.update(deltaTime);
 		
-		
+		effect.update(deltaTime);
 			
 		if (firstFrame)
 		{
@@ -194,6 +201,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		/*** TERRAIN ***/
 		terrain.display(shader);
 		
+		
+		/*** PARTICLES ***/
+		ModelMatrix.main.pushMatrix();
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		effect.draw(shader);
+		ModelMatrix.main.popMatrix();
 	}
 
 	@Override

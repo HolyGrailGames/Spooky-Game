@@ -6,9 +6,11 @@ precision mediump float;
 
 uniform sampler2D u_diffuseTexture;
 uniform sampler2D u_alphaTexture;
+uniform sampler2D u_emissionTexture;
 
 uniform float u_usesDiffuseTexture;
 uniform float u_usesAlphaTexture;
+uniform float u_usesEmissionTexture;
 
 uniform vec4 u_globalAmbient;
 
@@ -52,15 +54,29 @@ void main()
 		materialDiffuse = u_materialDiffuse;
 	}
 	
+	vec4 materialEmission;
+	if(u_usesEmissionTexture == 1.0)
+	{
+		materialEmission = texture2D(u_emissionTexture, v_uv); // * u_materialEmission;  Also * u_materialEmission ??? up to you. 		
+	}
+	else
+	{
+		materialEmission = u_materialEmission;
+	}
+	
 	if(u_usesAlphaTexture == 1.0)
 	{
 		materialDiffuse.a = texture2D(u_alphaTexture, v_uv).r;
 	}
-	
+
+	materialDiffuse.a *= materialEmission.a;
+
+	/*
 	if(materialDiffuse.a < 0.1) 
 	{
 		discard;
 	}
+	*/
 
 	vec4 materialSpecular = u_materialSpecular;
 
@@ -88,7 +104,7 @@ void main()
 
 	// end for each light
 	
-	vec4 finalObjectColor = u_globalAmbient * materialDiffuse + u_materialEmission + light1CalcColor;
+	vec4 finalObjectColor = u_globalAmbient * materialDiffuse + materialEmission + light1CalcColor;
 	
 	// FOG stuff
 	if(v_distance < u_fogStart) 

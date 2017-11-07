@@ -29,6 +29,10 @@ public class Shader {
 	private int usesAlphaTexLoc;
 	private int alphaTextureLoc;
 	
+	private boolean usesEmissionTexture = false;
+	private int usesEmissionTexLoc;
+	private int emissionTextureLoc;
+	
 	private int eyePosLoc;
 
 	private int globalAmbLoc;
@@ -100,6 +104,9 @@ public class Shader {
 		usesAlphaTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesAlphaTexture");
 		alphaTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_alphaTexture");
 		
+		usesEmissionTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesEmissionTexture");
+		emissionTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_emissionTexture");
+		
 		eyePosLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
 
 		globalAmbLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbient");
@@ -127,6 +134,55 @@ public class Shader {
 		Gdx.gl.glUseProgram(renderingProgramID);
 	}
 
+	public void setTextures(Texture diffuseTex, Texture alphaTex, Texture emissionTex)
+	{
+		if(diffuseTex == null)
+		{
+			Gdx.gl.glUniform1f(usesDiffuseTexLoc, 0.0f);
+			usesDiffuseTexture = false;
+		}
+		else
+		{
+			diffuseTex.bind(1);
+			Gdx.gl.glUniform1i(diffuseTextureLoc, 1);
+			Gdx.gl.glUniform1f(usesDiffuseTexLoc, 1.0f);
+			usesDiffuseTexture = true;
+
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
+		}
+		
+		if(alphaTex == null)
+		{
+			Gdx.gl.glUniform1f(usesAlphaTexLoc, 0.0f);
+			usesAlphaTexture = false;
+		}
+		else
+		{
+			alphaTex.bind(0);
+			Gdx.gl.glUniform1i(alphaTextureLoc, 0);
+			Gdx.gl.glUniform1f(usesAlphaTexLoc, 1.0f);
+			usesAlphaTexture = true;
+		}
+		
+		if(alphaTex == null)
+		{
+			Gdx.gl.glUniform1f(usesEmissionTexLoc, 0.0f);
+			usesEmissionTexture = false;
+		}
+		else
+		{
+			alphaTex.bind(2);
+			Gdx.gl.glUniform1i(emissionTextureLoc, 2);
+			Gdx.gl.glUniform1f(usesEmissionTexLoc, 1.0f);
+			usesEmissionTexture = true;
+			
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
+			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
+		}
+		
+	}
+	/*
 	public void setDiffuseTexture(Texture tex)
 	{
 		if(tex == null)
@@ -146,6 +202,7 @@ public class Shader {
 		}
 	}
 	
+	
 	public void setAlphaTexture(Texture tex)
 	{
 		if(tex == null)
@@ -162,8 +219,6 @@ public class Shader {
 		}
 	}
 	
-	// TODO: fix
-	/*
 	public void setEmissionTexture(Texture tex)
 	{
 		if(tex == null)
@@ -182,11 +237,10 @@ public class Shader {
 			Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
 		}
 	}
-	*/
-
+	 */
 	public boolean usesTextures()
 	{
-		return (usesDiffuseTexture || usesAlphaTexture/* || usesSpecularTexture ... etc.*/);
+		return (usesDiffuseTexture || usesAlphaTexture || usesEmissionTexture/* || usesSpecularTexture ... etc.*/);
 	}
 
 

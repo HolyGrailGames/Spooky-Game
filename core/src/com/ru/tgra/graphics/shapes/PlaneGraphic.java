@@ -61,8 +61,7 @@ public class PlaneGraphic {
 
 	public static void drawSolidPlane(Shader shader, Texture diffuseTexture, Texture alphaTexture) {
 
-		shader.setDiffuseTexture(diffuseTexture);
-		shader.setAlphaTexture(alphaTexture);
+		shader.setTextures(diffuseTexture, alphaTexture, null);
 
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);

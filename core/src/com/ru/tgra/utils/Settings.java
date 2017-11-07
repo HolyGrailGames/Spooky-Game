@@ -19,7 +19,7 @@ public class Settings {
 	/*** TERRAIN ***/
 	public static final float TERRAIN_MIN_HEIGHT = -1.0f;
 	public static final float TERRAIN_MAX_HEIGHT = 1f;
-	public static final float TERRAIN_STEEPNESS = 0.1f;		// Higher value means more steepness
+	public static final float TERRAIN_STEEPNESS = 0.01f;		// Higher value means more steepness
 	public static final int   TERRAIN_SIZE = 8;				// Number of tiles
 	public static final int   TERRAIN_TILE_SIZE = 32;		// Size of tiles, each tile has (size^2)*2 triangles drawn
 	public static final float TERRAIN_SCALE = 5;
