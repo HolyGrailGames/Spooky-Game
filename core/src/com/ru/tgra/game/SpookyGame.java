@@ -31,16 +31,14 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 	static Shader shader;
 
-	static MeshModel model;
 
-	private static Texture tex;
 	private static Texture groundTexture1;
 	
 	Motion bsplineMotion;
 	Motion motion;
 	
 	List<Firefly> fireflies;
-	//Firefly firefly;
+	List<BSplineMotion> curves;
 	
 	float currentTime;
 	boolean firstFrame = true;
@@ -63,19 +61,20 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		shader = new Shader();
 		
-		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
-		
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 		Gdx.gl.glGenerateMipmap(GL20.GL_TEXTURE_2D);
 		Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MIN_FILTER, GL20.GL_LINEAR_MIPMAP_NEAREST);
 
-		model = G3DJModelLoader.loadG3DJFromFile("testBlob.g3dj", true);
-		model.setPosition(new Point3D(0.0f, 2.0f, -1.0f));
+		fireflies = GameManager.initializeFireflies(Settings.FIREFLY_COUNT);
+		curves = new ArrayList<BSplineMotion>();
 		
-		fireflies = GameManager.initializeFireflies(1);
-		//firefly = new Firefly(new Point3D(5f, 2f, 5f), 0.2f, GameManager.flameTex, GameManager.alphaTex);
+		for (int i = 0; i < Settings.FIREFLY_COUNT; i++)
+		{
+			BSplineMotion curve = GameManager.initializeCurves(fireflies.get(i).getPosition());
+			curves.add(curve);
+		}
 		
-		
+		/*
 		ArrayList<Point3D> controlPoints = new ArrayList<Point3D>();
 		controlPoints.add(new Point3D(0.0f, 1.0f, -1.0f));
 		controlPoints.add(new Point3D(5.0f, 1.5f, 3.0f));
@@ -94,7 +93,8 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		controlPoints.add(new Point3D(7.0f, 1.0f, -1.0f));
 		controlPoints.add(new Point3D(0.0f, 1.0f, -1.0f));
 		bsplineMotion = new BSplineMotion(controlPoints, 5.0f, 20.0f);
-
+		*/
+		
 		BoxGraphic.create();
 		SphereGraphic.create();
 		PlaneGraphic.create();
@@ -102,14 +102,11 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());;
-
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 
 		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,1));
-		
 		terrain = new Terrain(new Point3D(0,0,0), Settings.TERRAIN_SIZE, Settings.TERRAIN_TILE_SIZE, groundTexture1);
-		
 	}
 
 	@Override
@@ -131,36 +128,17 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		yaw += player.yaw;
 		player.update(deltaTime);
 		
+		manageTotalTime(deltaTime);
 		
-		
-		for (Firefly firefly : fireflies)
+		for(int i = 0; i < fireflies.size(); i++)
 		{
-			firefly.update(deltaTime);			
+			curves.get(i).getCurrentPosition(currentTime, fireflies.get(i).getPosition());	
 		}
-		
-		
-			
-		if (firstFrame)
-		{
-			currentTime = 0.0f;
-			firstFrame = false;
-		}
-		else {
-			currentTime += deltaTime;
-		}
-		
-		
-		for (Firefly firefly : fireflies)
-		{
-			bsplineMotion.getCurrentPosition(currentTime, firefly.getPosition());	
-		}
-		
 	}
 
 	public void display()
 	{
 		Gdx.graphics.setTitle("SpookyGame | FPS: " + Gdx.graphics.getFramesPerSecond());
-		
 
 		/*
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE); // cull face
@@ -168,14 +146,11 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glFrontFace(GL20.GL_CW); // GL_CCW for counter clock-wise
 		*/
 		
-		//ModelMatrix.main.loadIdentityMatrix();
-		
 		//do all actual drawing and rendering here
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
 		player.cam.display(shader);
 
-		
 		shader.setMaterial(Settings.TEST_MATERIAL);
 		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 		
@@ -192,6 +167,18 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		/*** TERRAIN ***/
 		terrain.display(shader);
+	}
+	
+	private void manageTotalTime(float deltaTime)
+	{
+		if (firstFrame)
+		{
+			currentTime = 0.0f;
+			firstFrame = false;
+		}
+		else {
+			currentTime += deltaTime;
+		}
 	}
 
 	@Override
