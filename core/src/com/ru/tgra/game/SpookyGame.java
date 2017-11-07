@@ -74,27 +74,6 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 			curves.add(curve);
 		}
 		
-		/*
-		ArrayList<Point3D> controlPoints = new ArrayList<Point3D>();
-		controlPoints.add(new Point3D(0.0f, 1.0f, -1.0f));
-		controlPoints.add(new Point3D(5.0f, 1.5f, 3.0f));
-		controlPoints.add(new Point3D(10.0f, 0.5f, 7.0f));
-		controlPoints.add(new Point3D(15.0f, 1.0f, 11.0f));
-		controlPoints.add(new Point3D(10.0f, 1.0f, 15.0f));
-		controlPoints.add(new Point3D(5.0f, 1.0f, 9.0f));
-		controlPoints.add(new Point3D(0.0f, 1.5f, 11.0f));
-		controlPoints.add(new Point3D(5.0f, 0.5f, 13.0f));
-		controlPoints.add(new Point3D(10.0f, 0.5f, 11.0f));
-		controlPoints.add(new Point3D(15.0f, 1.0f, 9.0f));
-		controlPoints.add(new Point3D(10.0f, 1.5f, 7.0f));
-		controlPoints.add(new Point3D(5.0f, 1.0f, 5.0f));
-		controlPoints.add(new Point3D(0.0f, 1.0f, 3.0f));
-		controlPoints.add(new Point3D(15.0f, 1.0f, 1.0f));
-		controlPoints.add(new Point3D(7.0f, 1.0f, -1.0f));
-		controlPoints.add(new Point3D(0.0f, 1.0f, -1.0f));
-		bsplineMotion = new BSplineMotion(controlPoints, 5.0f, 20.0f);
-		*/
-		
 		BoxGraphic.create();
 		SphereGraphic.create();
 		PlaneGraphic.create();
