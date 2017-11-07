@@ -24,7 +24,7 @@ public class GameManager {
 	{
 		List<Firefly> fireflies = new ArrayList<Firefly>();
 		
-		float rad = (Settings.TERRAIN_SIZE * Settings.TERRAIN_SCALE) / 2.0f;
+		float rad = (Settings.TERRAIN_SIMPLEX_SIZE * Settings.TERRAIN_SIMPLEX_SCALE) / 2.0f;
 		
 		for (int i = 0; i < fireflyCount; i++)
 		{	
@@ -67,6 +67,5 @@ public class GameManager {
 	public static void exit() {
 		Gdx.graphics.setDisplayMode(500, 500, false);
 		Gdx.app.exit();
-		System.exit(0);
 	}
 }
