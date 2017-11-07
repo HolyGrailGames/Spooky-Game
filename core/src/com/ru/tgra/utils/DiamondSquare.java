@@ -2,6 +2,8 @@ package com.ru.tgra.utils;
 
 import java.util.Random;
 
+import com.ru.tgra.managers.GameManager;
+
 public class DiamondSquare {
 	
 	private int size;
@@ -16,6 +18,7 @@ public class DiamondSquare {
 			System.out.println("Error generating terrain using Diamond Square algorithm!");
 			System.out.println("Make sure that TERRAIN_DSQUARE_SIZE and TERRAIN_DSQUARE_TILE_SIZE");
 			System.out.println("values in the Settings class are both a power of two");
+			GameManager.exit();
 		}
 		
 		this.size = size;

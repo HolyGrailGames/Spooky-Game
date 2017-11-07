@@ -63,4 +63,10 @@ public class GameManager {
 		
 		return curve;
 	}
+	
+	public static void exit() {
+		Gdx.graphics.setDisplayMode(500, 500, false);
+		Gdx.app.exit();
+		System.exit(0);
+	}
 }

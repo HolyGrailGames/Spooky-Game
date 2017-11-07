@@ -46,8 +46,7 @@ public class InputManager {
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
 		{
-			Gdx.graphics.setDisplayMode(500, 500, false);
-			Gdx.app.exit();
+			GameManager.exit();
 		}
 		
 		if(Gdx.input.isKeyJustPressed(Input.Keys.P))
