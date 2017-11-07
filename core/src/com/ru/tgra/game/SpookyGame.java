@@ -209,5 +209,4 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
-
 }

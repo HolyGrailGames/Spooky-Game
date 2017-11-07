@@ -44,11 +44,8 @@ public class Settings {
 	public static final float FL_QUADATT = 0.0f;
 	
 	/*** FIREFLIES ***/
-	public static final int FIREFLY_COUNT = 10;
+	public static final int FIREFLY_COUNT = 1000;
 	
-
-
-
 	/*** MATERIALS ***/
 	public static final Material TEST_MATERIAL = new Material(
 			new Color(0.7f, 0.7f, 0.7f, 1.0f),	// Diffuse

@@ -54,12 +54,13 @@ public class GameManager {
 					
 			controlPoints.add(controlPoint);
 			
-			pointIncrement += 0.3f;
+			
+			pointIncrement += 1.0f;
 		}
 		
 		
 		
-		BSplineMotion curve = new BSplineMotion(controlPoints, rand.nextFloat() * 2, 50f);
+		BSplineMotion curve = new BSplineMotion(controlPoints, rand.nextInt(5), 60f);
 		
 		return curve;
 	}
