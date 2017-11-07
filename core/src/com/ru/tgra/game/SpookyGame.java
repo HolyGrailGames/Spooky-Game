@@ -1,6 +1,7 @@
 package com.ru.tgra.game;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -18,7 +19,8 @@ import com.ru.tgra.motion.BSplineMotion;
 import com.ru.tgra.motion.BezierMotion;
 import com.ru.tgra.motion.LinearMotion;
 import com.ru.tgra.motion.Motion;
-import com.ru.tgra.objects.Floor;
+import com.ru.tgra.objects.Terrain;
+import com.ru.tgra.objects.Tile;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -42,7 +44,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	Random rand = new Random();
 
 	public static Player player;
-	private Floor floor;
+	private Terrain terrain;
 	
 	float yaw = 0;
 
@@ -56,7 +58,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		//Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
 
 		shader = new Shader();
-
+		
 		tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
 		alphaTex = new Texture(Gdx.files.internal("textures/alphaMap01.png"));
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex2.png"));
@@ -72,6 +74,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 										new Point3D(7.0f, 0.0f, 3.0f), 
 										new Point3D(3.0f, 0.0f, 5.0f), 
 										new Point3D(5.0f, 0.0f, 1.0f), 3.0f, 15.0f);
+										
 		
 		*/
 		ArrayList<Point3D> controlPoints = new ArrayList<Point3D>();
@@ -96,7 +99,6 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		BoxGraphic.create();
 		SphereGraphic.create();
 		PlaneGraphic.create();
-		//NewPlaneGraphic.create();
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
@@ -116,15 +118,10 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 
-		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,-1));
+		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,1));
 		
-		floor = new Floor(
-				new Point3D(2, 0, 2), new Vector3D(Settings.GROUND_WIDTH, 1.0f, Settings.GROUND_HEIGHT),
-				Settings.TEST_MATERIAL, groundTexture1);
-		/*
-		tile = new Tile(new Point3D(3,1,3), new Vector3D(1,1,1), Settings.TEST_MATERIAL, groundTexture1);
-		*/
-
+		terrain = new Terrain(new Point3D(0,0,0), Settings.TERRAIN_SIZE, Settings.TERRAIN_TILE_SIZE, groundTexture1);
+		
 	}
 
 	@Override
@@ -182,7 +179,6 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 		
 		player.display(shader);
-		//floor.display(shader);
 
 		/*** LIGHTS ***/
 		//shader.setLight(light);
@@ -195,47 +191,10 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		model.draw(shader, tex);
 		ModelMatrix.main.popMatrix();
 
-		/*** PLANE ***/
-		drawGround();
-		floor.display(shader);
-		//tile.display(shader);
+		/*** TERRAIN ***/
+		terrain.display(shader);
+		
 	}
-
-
-
-	private static void drawGround()
-	{
-		shader.setMaterial(Settings.TEST_MATERIAL);
-
-		/*
-		// Draw the floor of the maze.
-		ModelMatrix.main.pushMatrix();
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		//PlaneGraphic.drawSolidPlane(shader, groundTexture1, null);
-		NewPlaneGraphic.drawSolidPlane(shader, groundTexture1, null);
-		ModelMatrix.main.popMatrix();
-		*/
-		
-		/*
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(0.0f, 0.01f, 0.0f);
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		NewPlaneGraphic.drawOutlinePlane(shader, null, null);
-		ModelMatrix.main.popMatrix();
-		*/
-		
-		
-		ModelMatrix.main.pushMatrix();
-		shader.setMaterialDiffuse(1, 1, 0, 1);
-		ModelMatrix.main.addTranslation(-0.5f, 0.0f, 0.5f);
-		ModelMatrix.main.addScale(0.03f, 0.03f, 0.03f);
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		SphereGraphic.drawSolidSphere(shader, null, null);
-		ModelMatrix.main.popMatrix();
-
-	}
-	
-
 
 	@Override
 	public boolean keyDown(int keycode) {

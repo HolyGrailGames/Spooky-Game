@@ -9,19 +9,20 @@ public class Settings {
 	public static final float WALK_SPEED = 1.0f;
 
 	/*** FOG ***/
-	public static final float FOG_START = -10.0f;
-	public static final float FOG_END = 10.0f;
+	public static final float FOG_START = 0.0f;
+	public static final float FOG_END = 15.0f;
 	public static final Color FOG_COLOR = new Color(0.3f, 0.3f, 0.3f, 1.0f);
 
-	/*** PLANE CALCULATIONS ***/
-	public static final int SUBDIVISIONS = 6;
-	public static final String HORIZONTAL = "HORIZONTAL";
-	public static final String VERTICAL = "VERTICAL";
-	public static final float GROUND_WIDTH = 25.0f;
-	public static final float GROUND_HEIGHT = 25.0f;
-
-	// CAMERA
+	/*** CAMERA ***/
 	public static final float FOV = 55.0f;
+	
+	/*** TERRAIN ***/
+	public static final float TERRAIN_MIN_HEIGHT = -1.0f;
+	public static final float TERRAIN_MAX_HEIGHT = 1f;
+	public static final float TERRAIN_STEEPNESS = 0.1f;		// Higher value means more steepness
+	public static final int   TERRAIN_SIZE = 8;				// Number of tiles
+	public static final int   TERRAIN_TILE_SIZE = 32;		// Size of tiles, each tile has (size^2)*2 triangles drawn
+	public static final float TERRAIN_SCALE = 5;
 
 	/*** LIGHTS ***/
 	// FLASHLIGHT

@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.ru.tgra.game.SpookyGame;
 import com.ru.tgra.graphics.Shader;
+import com.ru.tgra.objects.Terrain;
 import com.ru.tgra.utils.OpenSimplexNoise;
+import com.ru.tgra.utils.Vector3D;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -13,24 +16,23 @@ import java.util.Random;
 
 public class NewPlaneGraphic {
 
-	private static FloatBuffer vertexBuffer;
-	private static FloatBuffer normalBuffer;
+	private FloatBuffer vertexBuffer;
+	private FloatBuffer normalBuffer;
 	private static FloatBuffer uvBuffer;
 	private static ShortBuffer indexBuffer;
 
-	static final int SIZE_PER_SIDE = 8; // MAX allowed value is 256
+	int SIZE_PER_SIDE; // MAX allowed value is 256
 	static final float MIN_POSITION = -0.5f;
 	static final float POSITION_RANGE = 1f;
-	
-	private static Random rand = new Random();
 
 	static int indexCount;
 	
-	public NewPlaneGraphic(OpenSimplexNoise noise) {
-		create(noise);
+	public NewPlaneGraphic(int tileX, int tileZ, int edgeCount) {
+		SIZE_PER_SIDE = edgeCount;
+		create(tileX, tileZ);
 	}
 
-	public void create(OpenSimplexNoise noise) {
+	public void create(int tileX, int tileZ) {
 		final int width = SIZE_PER_SIDE;
 		final int height = SIZE_PER_SIDE;
 
@@ -44,11 +46,9 @@ public class NewPlaneGraphic {
 		int normalOffset = 0;
 		int uvOffset = 0;
 
-		
 		for (int z = 0; z <= height; z++) {
 			for (int x = 0; x <= width; x++) {
 				final float xRatio = x / (float) (width);
-
 				// Build our plane from the top down, so that our triangles are
 				// counter-clockwise.
 				final float zRatio = 1f - (z / (float) (height));
@@ -58,10 +58,10 @@ public class NewPlaneGraphic {
 
 				final float xPosition = MIN_POSITION + (xRatio * POSITION_RANGE);
 				final float zPosition = MIN_POSITION + (zRatio * POSITION_RANGE);
-				
+
 				// Position
 				vertexArray[offset++] = xPosition;
-				vertexArray[offset++] = (float)noise.eval(xPosition, zPosition);
+				vertexArray[offset++] = Terrain.yValues[(width*tileX)+x][(height*tileZ)+z];
 				vertexArray[offset++] = zPosition;
 				
 				// UV
@@ -69,11 +69,11 @@ public class NewPlaneGraphic {
 				uvArray[uvOffset++] = 1-v;
 				
 				// Normal
-				normalArray[normalOffset++] = 0.0f;
-				normalArray[normalOffset++] = 1.0f;
-				normalArray[normalOffset++] = 0.0f;
+				Vector3D normal = calculateNormal((width*tileX)+x, (height*tileZ)+z);
+				normalArray[normalOffset++] = normal.x;
+				normalArray[normalOffset++] = normal.y;
+				normalArray[normalOffset++] = normal.z;
 			}
-			System.out.println();
 		}
 
 		vertexBuffer = BufferUtils.newFloatBuffer(arraySize);
@@ -113,6 +113,19 @@ public class NewPlaneGraphic {
 		indexBuffer = BufferUtils.newShortBuffer(indexCount);
 		BufferUtils.copy(indexArray, 0, indexBuffer, indexCount);
 		indexBuffer.rewind();
+	}
+	
+	private Vector3D calculateNormal(int x, int z) {
+		if (x < 1 || x >= Terrain.totalSize-1  || z < 1 || z >= Terrain.totalSize-1) {
+			return Vector3D.up();
+		}
+		float heightL = Terrain.yValues[x-1][z];
+		float heightR = Terrain.yValues[x+1][z];
+		float heightU = Terrain.yValues[x][z-1];
+		float heightD = Terrain.yValues[x][z+1];
+		Vector3D normal = new Vector3D(heightL-heightR, 2.0f, heightD-heightU);
+		normal.normalize();
+		return normal;
 	}
 
 	public void drawSolidPlane(Shader shader, Texture diffuseTexture, Texture alphaTexture) {

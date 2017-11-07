@@ -1,6 +1,7 @@
 package com.ru.tgra.objects;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.ru.tgra.game.SpookyGame;
 import com.ru.tgra.graphics.Material;
 import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
@@ -12,13 +13,13 @@ import com.ru.tgra.utils.Vector3D;
 
 public class Tile extends GameObject {
 	
-	private NewPlaneGraphic plane;
+	public NewPlaneGraphic plane;
 
-	public Tile(Point3D position, Vector3D scale, Material material, Texture tex, OpenSimplexNoise noise) {
-		super(position, null, scale, material, tex);
-		// TODO Auto-generated constructor stub
-		plane = new NewPlaneGraphic(noise);
+	public Tile(int tileX, int tileZ, int edgeCount, Point3D position, Material material, Texture tex) {
+		super(position, null, null, material, tex);
+		plane = new NewPlaneGraphic(tileX, tileZ, edgeCount);
 	}
+	
 
 	@Override
 	public void update(float deltaTime) {
@@ -32,12 +33,11 @@ public class Tile extends GameObject {
 		if (this.material != null) {
 			shader.setMaterial(this.material);
 		}
+
 		ModelMatrix.main.addTranslation(position.x, position.y, position.z);
-		ModelMatrix.main.addScale(scale.x, scale.y, scale.z);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		plane.drawSolidPlane(shader, tex, null);
 		ModelMatrix.main.popMatrix();
-
 	}
 
 }
