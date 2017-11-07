@@ -1,4 +1,4 @@
-package com.ru.tgra.utils;
+package com.ru.tgra.noise;
 
 /*
  * OpenSimplex Noise in Java.

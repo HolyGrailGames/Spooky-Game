@@ -5,20 +5,19 @@ import com.ru.tgra.game.SpookyGame;
 import com.ru.tgra.graphics.Material;
 import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
-import com.ru.tgra.graphics.shapes.NewPlaneGraphic;
 import com.ru.tgra.graphics.shapes.PlaneGraphic;
 import com.ru.tgra.managers.GameManager;
-import com.ru.tgra.utils.OpenSimplexNoise;
+import com.ru.tgra.noise.OpenSimplexNoise;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Vector3D;
 
 public class Tile extends GameObject {
 	
-	public NewPlaneGraphic plane;
+	public PlaneGraphic plane;
 
 	public Tile(int tileX, int tileZ, int edgeCount, Point3D position, Material material, Texture tex) {
 		super(position, null, null, material, tex);
-		plane = new NewPlaneGraphic(tileX, tileZ, edgeCount);
+		plane = new PlaneGraphic(tileX, tileZ, edgeCount);
 	}
 	
 

@@ -34,7 +34,7 @@ public class Player {
 		this.yaw = 0;
 		this.flashlight = new Flashlight(position, direction);
 
-		cam.look(position, new Point3D(direction.x+position.x, position.y, direction.z+position.z), Vector3D.up());
+		cam.look(position, new Point3D(direction.x+position.x, direction.y+position.y, direction.z+position.z), Vector3D.up());
 	}
 
 	public void update(float deltaTime) {

@@ -1,6 +1,9 @@
-package com.ru.tgra.utils;
+package com.ru.tgra.noise;
 
 import java.util.Random;
+
+import com.ru.tgra.managers.GameManager;
+import com.ru.tgra.utils.Utilities;
 
 public class DiamondSquare {
 	
@@ -10,12 +13,14 @@ public class DiamondSquare {
 	private float range;
 
 	public DiamondSquare(int size, float cornerHeight, float range, long seed) {
-		//size of grid to generate, note this must be a
-		//value 2^n+1
+		// size of grid to generate, note this must be a value equal to 2^n+1
 		if (!Utilities.isPowerOfTwo(size-1)) {
 			System.out.println("Error generating terrain using Diamond Square algorithm!");
 			System.out.println("Make sure that TERRAIN_DSQUARE_SIZE and TERRAIN_DSQUARE_TILE_SIZE");
 			System.out.println("values in the Settings class are both a power of two");
+			GameManager.exit();
+
+			System.exit(0);
 		}
 		
 		this.size = size;

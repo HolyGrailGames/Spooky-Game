@@ -6,9 +6,9 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
-import com.ru.tgra.utils.DiamondSquare;
-import com.ru.tgra.utils.NoiseAlgorithm;
-import com.ru.tgra.utils.OpenSimplexNoise;
+import com.ru.tgra.noise.DiamondSquare;
+import com.ru.tgra.noise.NoiseAlgorithm;
+import com.ru.tgra.noise.OpenSimplexNoise;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Utilities;
@@ -38,9 +38,9 @@ public class Terrain {
 		if (alg == NoiseAlgorithm.OPEN_SIMPLEX_NOISE) {
 			System.out.println("Generating Terrain with Open Simplex Noise...");
 			
-			this.size = Settings.TERRAIN_SIZE;
-			this.tileEdgeCount = Settings.TERRAIN_TILE_SIZE;
-			totalSize = (Settings.TERRAIN_SIZE*Settings.TERRAIN_TILE_SIZE)+1;
+			this.size = Settings.TERRAIN_SIMPLEX_SIZE;
+			this.tileEdgeCount = Settings.TERRAIN_SIMPLEX_TILE_SIZE;
+			totalSize = (Settings.TERRAIN_SIMPLEX_SIZE*Settings.TERRAIN_SIMPLEX_TILE_SIZE)+1;
 			yValues = new float[totalSize][totalSize];
 			
 			this.noise = new OpenSimplexNoise(System.currentTimeMillis());
@@ -68,10 +68,10 @@ public class Terrain {
 		for(int z = 0; z < totalSize; z++) {
 			float xOff = 0;
 			for(int x = 0; x < totalSize; x++) {
-				yValues[x][z] = Utilities.map((float)noise.eval(xOff, zOff), -1, 1, Settings.TERRAIN_MIN_HEIGHT, Settings.TERRAIN_MAX_HEIGHT);
-				xOff+=Settings.TERRAIN_STEEPNESS;
+				yValues[x][z] = Utilities.map((float)noise.eval(xOff, zOff), -1, 1, Settings.TERRAIN_SIMPLEX_MIN_HEIGHT, Settings.TERRAIN_SIMPLEX_MAX_HEIGHT);
+				xOff+=Settings.TERRAIN_SIMPLEX_STEEPNESS;
 			}
-			zOff+=Settings.TERRAIN_STEEPNESS;
+			zOff+=Settings.TERRAIN_SIMPLEX_STEEPNESS;
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class Terrain {
 	
 	public void display(Shader shader) {
 		ModelMatrix.main.pushMatrix();
-		float s = (this.alg == NoiseAlgorithm.OPEN_SIMPLEX_NOISE) ? Settings.TERRAIN_SCALE : Settings.TERRAIN_DSQUARE_SCALE;
+		float s = (this.alg == NoiseAlgorithm.OPEN_SIMPLEX_NOISE) ? Settings.TERRAIN_SIMPLEX_SCALE : Settings.TERRAIN_DSQUARE_SCALE;
 		
 		ModelMatrix.main.addScale(s, 1, s);
 		for(Tile tile : tiles) {

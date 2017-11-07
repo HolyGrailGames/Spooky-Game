@@ -20,10 +20,10 @@ import com.ru.tgra.motion.BSplineMotion;
 import com.ru.tgra.motion.BezierMotion;
 import com.ru.tgra.motion.LinearMotion;
 import com.ru.tgra.motion.Motion;
+import com.ru.tgra.noise.NoiseAlgorithm;
 import com.ru.tgra.objects.Firefly;
 import com.ru.tgra.objects.Terrain;
 import com.ru.tgra.objects.Tile;
-import com.ru.tgra.utils.NoiseAlgorithm;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -77,7 +77,6 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		BoxGraphic.create();
 		SphereGraphic.create();
-		PlaneGraphic.create();
 		SpriteGraphic.create();
 		
 		ModelMatrix.main = new ModelMatrix();
@@ -85,15 +84,17 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		Gdx.gl.glClearColor(Settings.FOG_COLOR.r, Settings.FOG_COLOR.g, Settings.FOG_COLOR.b, Settings.FOG_COLOR.a);
 
-		player = new Player(new Point3D(0f, 1f, 0f), new Vector3D(0,0,1));
 		
-		float startY = Settings.TERRAIN_SCALE;
+		float startX = Settings.TERRAIN_SIMPLEX_SIZE;
+		float startY = Settings.TERRAIN_SIMPLEX_SCALE;
 		
 		if (Settings.NOISE_ALG == NoiseAlgorithm.DIAMOND_SQUARE) {
-			startY = Settings.TERRAIN_DSQUARE_RANGE*Settings.TERRAIN_DSQUARE_SCALE;
+			startX = Settings.TERRAIN_DSQUARE_SIZE;
+			startY = Settings.TERRAIN_DSQUARE_RANGE/2 /*Settings.TERRAIN_DSQUARE_SCALE*/;
 		}
+		player = new Player(new Point3D(startX, startY, startX), new Vector3D(-1,-0.7f,-1));
 
-		terrain = new Terrain(new Point3D(0,startY,0), groundTexture1, Settings.NOISE_ALG);
+		terrain = new Terrain(new Point3D(0,0,0), groundTexture1, Settings.NOISE_ALG);
 		
 	}
 
@@ -131,7 +132,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		/*
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE); // cull face
 		Gdx.gl.glCullFace(GL20.GL_BACK); // cull back face
-		Gdx.gl.glFrontFace(GL20.GL_CW); // GL_CCW for counter clock-wise
+		Gdx.gl.glFrontFace(GL20.GL_CCW); // GL_CCW for counter clock-wise
 		*/
 		
 		//do all actual drawing and rendering here
