@@ -38,8 +38,8 @@ public class Player {
 	}
 
 	public void update(float deltaTime) {
-		cam.slide(velocity.x, velocity.y, 0);
-		cam.walkForward(velocity.z);
+		cam.slide(velocity.x, velocity.y, velocity.z);
+		//cam.walkForward(velocity.z);
 		cam.rotateY(yaw*deltaTime*Settings.MOUSE_SENSITIVITY);
 		cam.pitch(pitch*deltaTime*Settings.MOUSE_SENSITIVITY);
 
@@ -73,11 +73,11 @@ public class Player {
 	}
 
 	public void walkForward(float deltaTime) {
-		velocity.z = deltaTime * Settings.WALK_SPEED;
+		velocity.z = -deltaTime * Settings.WALK_SPEED;
 	}
 
 	public void walkBackwards(float deltaTime) {
-		velocity.z = -deltaTime * Settings.WALK_SPEED;
+		velocity.z = deltaTime * Settings.WALK_SPEED;
 	}
 
 	public void flyUp(float deltaTime) {

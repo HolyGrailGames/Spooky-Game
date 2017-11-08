@@ -11,15 +11,22 @@ public class Settings {
 
 	/*** FOG ***/
 	public static final float FOG_START = 10.0f;
-	public static final float FOG_END = 50.0f;
+	public static final float FOG_END = 60.0f;
 	public static final Color FOG_COLOR = new Color(0.8f, 0.8f, 0.8f, 1.0f);
 
 	/*** CAMERA ***/
 	public static final float FOV = 55.0f;
 	
 	/*** TERRAIN ***/
-	//public static final NoiseAlgorithm NOISE_ALG = NoiseAlgorithm.OPEN_SIMPLEX_NOISE;
+	// You can comment and uncomment these two lines to change which
+	// Noise algorithm is used to calculate the height of the terrain.
 	public static final NoiseAlgorithm NOISE_ALG = NoiseAlgorithm.DIAMOND_SQUARE;
+	//public static final NoiseAlgorithm NOISE_ALG = NoiseAlgorithm.OPEN_SIMPLEX_NOISE;
+	
+	
+	public static final boolean USE_GRASS_TEXTURE = false;	// If true terrain will be rendered with a grass texture
+	public static final boolean RENDER_WATER = true;		// If true a water plane will be rendered at correct location
+	
 	
 	// DIAMOND SQUARE SETTINGS
 	public static final int TERRAIN_DSQUARE_SIZE = 4;		// The terrain will be size*size tiles large
@@ -65,28 +72,19 @@ public class Settings {
 	/*** MATERIALS ***/
 	public static final Material TERRAIN_MATERIAL = new Material(
 			new Color(0.0f, 0.0f, 0.0f, 1.0f),	// Diffuse
-			new Color(0.15f, 0.15f, 0.15f, 1.0f),	// Specular
+			new Color(0.12f, 0.12f, 0.12f, 1.0f),	// Specular
 			new Color(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
-			50.0f,	// Shininess
+			10.0f,	// Shininess
 			1.0f	// Opacity
 	);
 	
 	public static final Material WATER_MATERIAL = new Material(
 			new Color(0.0f, 0.0f, 0.0f, 1.0f),	// Diffuse
-			new Color(0.8f, 0.8f, 0.8f, 1.0f),	// Specular
+			new Color(1.0f, 1.0f, 1.0f, 1.0f),	// Specular
 			new Color(0.0f, 0.0f, 0.5f, 1.0f),	// Emission
-			128.0f,	// Shininess
-			0.8f	// Opacity
+			10.0f,	// Shininess
+			0.7f	// Opacity
 	);
-	
-	public static final Material TEST_MATERIAL = new Material(
-			new Color(0.0f, 0.0f, 0.0f, 1.0f),	// Diffuse
-			new Color(0.2f, 0.2f, 0.2f, 1.0f),	// Specular
-			new Color(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
-			128.0f,	// Shininess
-			1.0f	// Opacity
-	);
-	
 
 	/**
 	 * Private constructor to prevent anyone from creating an instance of this class.

@@ -12,18 +12,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.graphics.*;
 import com.ru.tgra.graphics.shapes.*;
-import com.ru.tgra.graphics.shapes.g3djmodel.G3DJModelLoader;
-import com.ru.tgra.graphics.shapes.g3djmodel.MeshModel;
 import com.ru.tgra.managers.GameManager;
 import com.ru.tgra.managers.InputManager;
 import com.ru.tgra.motion.BSplineMotion;
-import com.ru.tgra.motion.BezierMotion;
-import com.ru.tgra.motion.LinearMotion;
 import com.ru.tgra.motion.Motion;
 import com.ru.tgra.noise.NoiseAlgorithm;
 import com.ru.tgra.objects.Firefly;
 import com.ru.tgra.objects.Terrain;
-import com.ru.tgra.objects.Tile;
 import com.ru.tgra.utils.Point3D;
 import com.ru.tgra.utils.Settings;
 import com.ru.tgra.utils.Vector3D;
@@ -33,7 +28,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 	static Shader shader;
 
 
-	private static Texture groundTexture1;
+	private static Texture groundTexture;
 	private static Texture waterTexture;
 	
 	Motion bsplineMotion;
@@ -60,11 +55,11 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.input.setCursorCatched(true);
 
 		DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
-		//Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
+		Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
 
 		shader = new Shader();
 		
-		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
+		groundTexture = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
 		waterTexture = new Texture(Gdx.files.internal("textures/water.jpg"));
 
 		fireflies = GameManager.initializeFireflies(Settings.FIREFLY_COUNT);
@@ -94,8 +89,10 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 			startY = Settings.TERRAIN_DSQUARE_RANGE /*Settings.TERRAIN_DSQUARE_SCALE*/;
 		}
 		player = new Player(new Point3D(startX, startY, startX), new Vector3D(-1,-0.7f,-1));
-
-		terrain = new Terrain(new Point3D(0,0,0), null, Settings.TERRAIN_MATERIAL, Settings.NOISE_ALG, false);
+		
+		Texture terrainTexture = (Settings.USE_GRASS_TEXTURE) ? groundTexture : null;
+		
+		terrain = new Terrain(new Point3D(0,0,0), terrainTexture, Settings.TERRAIN_MATERIAL, Settings.NOISE_ALG, false);
 		water = new Terrain(new Point3D(0,0,0), waterTexture, Settings.WATER_MATERIAL, Settings.NOISE_ALG, true);
 		
 	}
@@ -140,15 +137,9 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		//do all actual drawing and rendering here
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
+		/*** PLAYER ***/
 		player.cam.display(shader);
-
-		shader.setMaterial(Settings.TEST_MATERIAL);
-		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
-		
 		player.display(shader);
-
-		/*** LIGHTS ***/
-		//shader.setLight(light);
 		
 		/*** FIREFLIES ***/
 		for (Firefly firefly : fireflies)
@@ -158,7 +149,10 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		/*** TERRAIN ***/
 		terrain.display(shader);
-		water.display(shader);
+		
+		if (Settings.RENDER_WATER) {
+			water.display(shader);
+		}
 	}
 	
 	private void manageTotalTime(float deltaTime)

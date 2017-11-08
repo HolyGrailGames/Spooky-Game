@@ -48,7 +48,7 @@ void main()
 	vec4 materialDiffuse;
 	if(u_usesDiffuseTexture == 1.0)
 	{
-		materialDiffuse = texture2D(u_diffuseTexture, v_uv) *vec4(v_color.r, v_color.g, v_color.b, 1.0); //also * u_materialDiffuse ??? up to you.
+		materialDiffuse = texture2D(u_diffuseTexture, v_uv);// *vec4(v_color.r, v_color.g, v_color.b, 1.0); //also * u_materialDiffuse ??? up to you.
 	}
 	else
 	{
