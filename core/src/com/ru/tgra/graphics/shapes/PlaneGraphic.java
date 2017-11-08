@@ -238,6 +238,6 @@ public class PlaneGraphic {
 		
 		//Gdx.gl.glLineWidth(5f);
 		
-		Gdx.gl.glDrawElements(GL20.GL_LINES, indexCount, GL20.GL_UNSIGNED_SHORT, indexBuffer);
+		Gdx.gl.glDrawElements(GL20.GL_LINE_STRIP, indexCount, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 }
