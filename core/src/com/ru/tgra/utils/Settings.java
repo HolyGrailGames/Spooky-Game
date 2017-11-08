@@ -60,7 +60,7 @@ public class Settings {
 	public static final float FL_QUADATT = 0.0f;
 	
 	/*** FIREFLIES ***/
-	public static final int FIREFLY_COUNT = 10;
+	public static final int FIREFLY_COUNT = 1000;
 
 	/*** MATERIALS ***/
 	public static final Material TERRAIN_MATERIAL = new Material(

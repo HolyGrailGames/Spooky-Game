@@ -43,7 +43,7 @@ public class BSplineMotion implements Motion {
 	}
 	
 	public void getCurrentPosition(float currentTime, Point3D out_position)
-	{
+	{	
 		if (currentTime < startTime)
 		{
 			out_position.x = pStart.x;
@@ -55,7 +55,9 @@ public class BSplineMotion implements Motion {
 			out_position.x = pEnd.x;
 			out_position.y = pEnd.y;
 			out_position.z = pEnd.z;
+//			System.out.println(out_position.x + " " + out_position.y + " " + out_position.z);
 			
+			// The fireflies will be moving from their start point towards their end point
 			if (forward == true)
 			{
 				forward = false;
@@ -64,6 +66,8 @@ public class BSplineMotion implements Motion {
 				timePerMotion = (endTime - startTime) / (float)motionCount;
 				initializeReverseMotions();
 			}
+			
+			// The fireflies will be moving from their end position back towards their starting position
 			else
 			{
 				forward = true;
@@ -72,7 +76,6 @@ public class BSplineMotion implements Motion {
 				timePerMotion = (endTime - startTime) / (float)motionCount;
 				initializeMotions();
 			}
-
 		}
 		else 
 		{
@@ -91,7 +94,7 @@ public class BSplineMotion implements Motion {
 	{
 		for (int i = controlPoints.size() - 1; i >= 0; i--)
 		{
-			reverseControlPoints.add(controlPoints.get(i));
+			reverseControlPoints.add(new Point3D(controlPoints.get(i).x, controlPoints.get(i).y, controlPoints.get(i).z));
 		}
 	}
 	
@@ -107,7 +110,6 @@ public class BSplineMotion implements Motion {
 		motions.add(motion);
 		
 		pStart = p1;
-		
 		
 		for (int i = 1; i < motionCount; i++) 
 		{
