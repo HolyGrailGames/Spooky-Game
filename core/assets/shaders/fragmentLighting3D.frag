@@ -26,7 +26,7 @@ uniform float u_quadraticAttenuation;
 uniform vec4 u_materialDiffuse;
 uniform vec4 u_materialSpecular;
 uniform float u_materialShininess;
-
+uniform float u_materialOpacity;
 uniform vec4 u_materialEmission;
 
 // FOG stuff
@@ -41,17 +41,19 @@ varying vec2 v_uv;
 varying vec4 v_normal;
 varying vec4 v_s;
 varying vec4 v_h;
+varying vec3 v_color;
 
 void main()
 {
 	vec4 materialDiffuse;
 	if(u_usesDiffuseTexture == 1.0)
 	{
-		materialDiffuse = texture2D(u_diffuseTexture, v_uv);  //also * u_materialDiffuse ??? up to you.
+		materialDiffuse = texture2D(u_diffuseTexture, v_uv) *vec4(v_color.r, v_color.g, v_color.b, 1.0); //also * u_materialDiffuse ??? up to you.
 	}
 	else
 	{
-		materialDiffuse = u_materialDiffuse;
+		//materialDiffuse = u_materialDiffuse;
+		materialDiffuse = vec4(v_color.r, v_color.g, v_color.b, u_materialOpacity);
 	}
 	
 	vec4 materialEmission;
@@ -124,6 +126,6 @@ void main()
 		gl_FragColor = (1 - fogRatio) * finalObjectColor + fogRatio * u_fogColor;
 		
 	}
-	gl_FragColor.a = materialDiffuse.a;
+	gl_FragColor.a = u_materialOpacity;
 	
 }

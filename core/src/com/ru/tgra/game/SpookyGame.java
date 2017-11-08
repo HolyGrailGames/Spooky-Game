@@ -34,6 +34,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 
 	private static Texture groundTexture1;
+	private static Texture waterTexture;
 	
 	Motion bsplineMotion;
 	Motion motion;
@@ -48,6 +49,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 	public static Player player;
 	private Terrain terrain;
+	private Terrain water;
 	
 	float yaw = 0;
 
@@ -63,8 +65,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		shader = new Shader();
 		
 		groundTexture1 = new Texture(Gdx.files.internal("textures/grass_tex.jpg"));
-		Gdx.gl.glGenerateMipmap(GL20.GL_TEXTURE_2D);
-		Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_MIN_FILTER, GL20.GL_LINEAR_MIPMAP_NEAREST);
+		waterTexture = new Texture(Gdx.files.internal("textures/water.jpg"));
 
 		fireflies = GameManager.initializeFireflies(Settings.FIREFLY_COUNT);
 		curves = new ArrayList<BSplineMotion>();
@@ -111,11 +112,12 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 		
 		if (Settings.NOISE_ALG == NoiseAlgorithm.DIAMOND_SQUARE) {
 			startX = Settings.TERRAIN_DSQUARE_SIZE;
-			startY = Settings.TERRAIN_DSQUARE_RANGE/2 /*Settings.TERRAIN_DSQUARE_SCALE*/;
+			startY = Settings.TERRAIN_DSQUARE_RANGE /*Settings.TERRAIN_DSQUARE_SCALE*/;
 		}
 		player = new Player(new Point3D(startX, startY, startX), new Vector3D(-1,-0.7f,-1));
 
-		terrain = new Terrain(new Point3D(0,0,0), groundTexture1, Settings.NOISE_ALG);
+		terrain = new Terrain(new Point3D(0,0,0), null, Settings.TERRAIN_MATERIAL, Settings.NOISE_ALG, false);
+		water = new Terrain(new Point3D(0,0,0), waterTexture, Settings.WATER_MATERIAL, Settings.NOISE_ALG, true);
 		
 	}
 
@@ -177,6 +179,7 @@ public class SpookyGame extends ApplicationAdapter implements InputProcessor {
 
 		/*** TERRAIN ***/
 		terrain.display(shader);
+		water.display(shader);
 	}
 	
 	private void manageTotalTime(float deltaTime)

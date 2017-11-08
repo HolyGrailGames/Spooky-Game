@@ -21,14 +21,14 @@ public class Material {
 		shininess = 1.0f;
 	}
 
-	public Material(Color diffuse, Color specular, Color emission, float shininess)
+	public Material(Color diffuse, Color specular, Color emission, float shininess, float opacity)
 	{
 		this.ambient = new Color(0.0f, 0.0f, 0.0f, 1.0f); // TODO: make constructor that takes ambient
 		this.diffuse = diffuse;
 		this.specular = specular;
 		this.emission = emission;
-		this.opacity = 1.0f; // TODO: make constructor that takes opacity
 		this.shininess = shininess;
+		this.opacity = opacity;
 	}
 
 	public String getId() {

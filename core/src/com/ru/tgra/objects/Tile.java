@@ -1,5 +1,7 @@
 package com.ru.tgra.objects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.game.SpookyGame;
 import com.ru.tgra.graphics.Material;
@@ -15,9 +17,9 @@ public class Tile extends GameObject {
 	
 	public PlaneGraphic plane;
 
-	public Tile(int tileX, int tileZ, int edgeCount, Point3D position, Material material, Texture tex) {
+	public Tile(int tileX, int tileZ, int edgeCount, Point3D position, Material material, Texture tex, float minHeight, float maxHeight) {
 		super(position, null, null, material, tex);
-		plane = new PlaneGraphic(tileX, tileZ, edgeCount);
+		plane = new PlaneGraphic(tileX, tileZ, edgeCount, minHeight, maxHeight);
 	}
 	
 
@@ -30,6 +32,13 @@ public class Tile extends GameObject {
 	@Override
 	public void display(Shader shader) {
 		ModelMatrix.main.pushMatrix();
+		if(material.opacity != 1.0f) {
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			//Gdx.gl.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
+			//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+		}
+		
 		if (this.material != null) {
 			shader.setMaterial(this.material);
 		}

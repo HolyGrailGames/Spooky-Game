@@ -16,6 +16,7 @@ public class Shader {
 	private int positionLoc;
 	private int normalLoc;
 	private int uvLoc;
+	private int colorLoc;
 	
 	private int modelMatrixLoc;
 	private int viewMatrixLoc;
@@ -36,7 +37,6 @@ public class Shader {
 	private int eyePosLoc;
 
 	private int globalAmbLoc;
-	//private int colorLoc;
 	private int lightPosLoc;
 	private int lightOnLoc;
 
@@ -50,6 +50,7 @@ public class Shader {
 	private int matDifLoc;
 	private int matSpecLoc;
 	private int matShineLoc;
+	private int matOpacityLoc;
 	private int matEmissionLoc;
 	
 	private int fogStartLoc;
@@ -91,12 +92,15 @@ public class Shader {
 		normalLoc				= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_normal");
 		Gdx.gl.glEnableVertexAttribArray(normalLoc);
 
-		uvLoc				= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_uv");
+		uvLoc					= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_uv");
 		Gdx.gl.glEnableVertexAttribArray(uvLoc);
+		
+		colorLoc				= Gdx.gl.glGetAttribLocation(renderingProgramID, "a_color");
+		Gdx.gl.glEnableVertexAttribArray(colorLoc);
 
 		modelMatrixLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_modelMatrix");
 		viewMatrixLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
-		projectionMatrixLoc	= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
+		projectionMatrixLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_projectionMatrix");
 
 		usesDiffuseTexLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
 		diffuseTextureLoc		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
@@ -124,6 +128,7 @@ public class Shader {
 		matDifLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
 		matSpecLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
 		matShineLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialShininess");
+		matOpacityLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialOpacity");
 		
 		fogStartLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogStart");
 		fogEndLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogEnd");
@@ -299,6 +304,11 @@ public class Shader {
 	{
 		Gdx.gl.glUniform1f(matShineLoc, shine);
 	}
+	
+	public void setOpacity(float opacity)
+	{
+		Gdx.gl.glUniform1f(matOpacityLoc, opacity);
+	}
 	public void setMaterialEmission(float r, float g, float b, float a)
 	{
 		Gdx.gl.glUniform4f(matEmissionLoc, r, g, b, a);
@@ -316,6 +326,10 @@ public class Shader {
 	public int getUVPointer()
 	{
 		return uvLoc;
+	}
+	public int getColorPointer()
+	{
+		return colorLoc;
 	}
 
 	public void setModelMatrix(FloatBuffer matrix)
@@ -362,5 +376,6 @@ public class Shader {
 		setMaterialSpecular(material.specular.r, material.specular.g,material.specular.b, material.specular.a);
 		setMaterialEmission(material.emission.r, material.emission.g,material.emission.b, material.emission.a);
 		setShininess(material.shininess);
+		setOpacity(material.opacity);
 	}
 }

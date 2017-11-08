@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.ru.tgra.graphics.Material;
 import com.ru.tgra.graphics.ModelMatrix;
 import com.ru.tgra.graphics.Shader;
 import com.ru.tgra.noise.DiamondSquare;
@@ -26,25 +27,37 @@ public class Terrain {
 	private DiamondSquare dSq;
 	private Texture tex;
 	private NoiseAlgorithm alg;
+	private float minHeight;
+	private float maxHeight;
+	private Material material;
 	
 	// Size is the number of tiles
 	// tileEdgeCount is the number of edges on one tile
-	public Terrain(Point3D position, Texture tex, NoiseAlgorithm alg) {
+	public Terrain(Point3D position, Texture tex, Material material, NoiseAlgorithm alg, boolean flat) {
 		this.position = position;
 		this.tex = tex;
 		this.tiles = new ArrayList<Tile>();
 		this.alg = alg;
+		this.material = material;
 		
 		if (alg == NoiseAlgorithm.OPEN_SIMPLEX_NOISE) {
 			System.out.println("Generating Terrain with Open Simplex Noise...");
 			
 			this.size = Settings.TERRAIN_SIMPLEX_SIZE;
 			this.tileEdgeCount = Settings.TERRAIN_SIMPLEX_TILE_SIZE;
+			this.minHeight = Settings.TERRAIN_SIMPLEX_MIN_HEIGHT;
+			this.maxHeight = Settings.TERRAIN_SIMPLEX_MAX_HEIGHT;
+			
 			totalSize = (Settings.TERRAIN_SIMPLEX_SIZE*Settings.TERRAIN_SIMPLEX_TILE_SIZE)+1;
-			yValues = new float[totalSize][totalSize];
 			
 			this.noise = new OpenSimplexNoise(System.currentTimeMillis());
-			generateNoise();
+			if (!flat) {
+				generateNoise();
+			}
+			else {
+				generateFlatYValues();
+			}
+			
 		}
 		else if (alg == NoiseAlgorithm.DIAMOND_SQUARE) {
 			System.out.println("Generating Terrain with Diamond Square...");
@@ -52,11 +65,18 @@ public class Terrain {
 			this.size = Settings.TERRAIN_DSQUARE_SIZE;
 			this.tileEdgeCount = Settings.TERRAIN_DSQUARE_TILE_SIZE;
 			totalSize = (Settings.TERRAIN_DSQUARE_SIZE*Settings.TERRAIN_DSQUARE_TILE_SIZE)+1;
+			this.minHeight = -Settings.TERRAIN_DSQUARE_RANGE+Settings.TERRAIN_DSQUARE_CORNER_HEIGHT;
+			this.maxHeight = Settings.TERRAIN_DSQUARE_RANGE+Settings.TERRAIN_DSQUARE_CORNER_HEIGHT;
 			
 			this.dSq = new DiamondSquare((Settings.TERRAIN_DSQUARE_SIZE*Settings.TERRAIN_DSQUARE_TILE_SIZE)+1,
 					Settings.TERRAIN_DSQUARE_CORNER_HEIGHT, Settings.TERRAIN_DSQUARE_RANGE,
 					System.currentTimeMillis());
-			generateDiamondSquareNoise();
+			if (!flat) {
+				generateDiamondSquareNoise();
+			} else {
+				generateFlatYValues();
+			}
+			
 		}
 		
 		create();
@@ -75,6 +95,17 @@ public class Terrain {
 		}
 	}
 	
+	private void generateFlatYValues() {
+		yValues = new float[totalSize][totalSize];
+		float height = minHeight + ((maxHeight - minHeight) * (Settings.WATER_LEVEL));
+		System.out.println(height);
+		for(int z = 0; z < totalSize; z++) {
+			for(int x = 0; x < totalSize; x++) {
+				yValues[x][z] = height;
+			}
+		}
+	}
+	
 	private void generateDiamondSquareNoise() {
 		yValues = this.dSq.generateNoise();
 	}
@@ -89,8 +120,10 @@ public class Terrain {
 				tiles.add(new Tile(
 						x,z, tileEdgeCount,
 						new Point3D(xPos, 0, zPos),
-						Settings.TEST_MATERIAL, 
-						tex));
+						material, 
+						tex,
+						this.minHeight,
+						this.maxHeight));
 			}
 		}
 	}

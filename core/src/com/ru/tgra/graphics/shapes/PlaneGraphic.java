@@ -8,6 +8,8 @@ import com.ru.tgra.game.SpookyGame;
 import com.ru.tgra.graphics.Shader;
 import com.ru.tgra.noise.OpenSimplexNoise;
 import com.ru.tgra.objects.Terrain;
+import com.ru.tgra.utils.Settings;
+import com.ru.tgra.utils.Utilities;
 import com.ru.tgra.utils.Vector3D;
 
 import java.nio.FloatBuffer;
@@ -18,6 +20,7 @@ public class PlaneGraphic {
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer normalBuffer;
+	private FloatBuffer colorBuffer;
 	private static FloatBuffer uvBuffer;
 	private static ShortBuffer indexBuffer;
 
@@ -27,7 +30,12 @@ public class PlaneGraphic {
 
 	static int indexCount;
 	
-	public PlaneGraphic(int tileX, int tileZ, int edgeCount) {
+	static float minHeight;
+	static float maxHeight;
+	
+	public PlaneGraphic(int tileX, int tileZ, int edgeCount, float minHeight, float maxHeight) {
+		PlaneGraphic.minHeight = minHeight;
+		PlaneGraphic.maxHeight = maxHeight;
 		SIZE_PER_SIDE = edgeCount;
 		create(tileX, tileZ);
 	}
@@ -36,32 +44,40 @@ public class PlaneGraphic {
 		final int width = SIZE_PER_SIDE;
 		final int height = SIZE_PER_SIDE;
 
+		int colorArraySize = (width+1) * (height+1) * 3;
 		int arraySize = (width+1) * (height+1) * 3;
 		int uvArraySize = (width+1) * (height+1) * 2;
 		final float[] vertexArray = new float[arraySize];
 		final float[] uvArray = new float[uvArraySize];
 		final float[] normalArray = new float[arraySize];
+		final float[] colorArray = new float[colorArraySize];
 
 		int offset = 0;
 		int normalOffset = 0;
 		int uvOffset = 0;
+		int colorOffset = 0;
+		
+		float min = Float.MAX_VALUE;
+		float max = Float.MIN_VALUE;
 
+		boolean bla = true;
 		for (int z = 0; z <= height; z++) {
 			for (int x = 0; x <= width; x++) {
-				final float xRatio = x / (float) (width);
+				float xRatio = x / (float) (width);
 				// Build our plane from the top down, so that our triangles are
 				// counter-clockwise.
-				final float zRatio = 1f - (z / (float) (height));
+				float zRatio = 1f - (z / (float) (height));
 				
 				final float u = x / (float)width;
 				final float v = z / (float)height;
 
 				final float xPosition = MIN_POSITION + (xRatio * POSITION_RANGE);
+				final float yPosition = Terrain.yValues[(width*tileX)+x][(height*tileZ)+z];
 				final float zPosition = MIN_POSITION + (zRatio * POSITION_RANGE);
-
+				
 				// Position
 				vertexArray[offset++] = xPosition;
-				vertexArray[offset++] = Terrain.yValues[(width*tileX)+x][(height*tileZ)+z];
+				vertexArray[offset++] = yPosition;
 				vertexArray[offset++] = zPosition;
 				
 				// UV
@@ -73,20 +89,89 @@ public class PlaneGraphic {
 				normalArray[normalOffset++] = normal.x;
 				normalArray[normalOffset++] = normal.y;
 				normalArray[normalOffset++] = normal.z;
+				
+				// Color
+				
+				float xCol = 1.0f;
+				float yCol = 1.0f;
+				float zCol = 1.0f;
+				
+				float yRatio = Utilities.map(yPosition, minHeight, maxHeight, 0.0f, 1.0f);
+				//System.out.println(yPosition);
+				
+				if (bla) {
+					System.out.println("My y pos: " + yPosition);
+					bla = false;
+				}
+				
+				if(yPosition < min) {
+					min = yPosition;
+				}
+				if(yPosition > max) {
+					//System.out.println("sdf");
+					max = yPosition;
+				}
+				
+				// Water
+				if (yRatio <= Settings.WATER_LEVEL) {
+					xCol = 0.24f;
+					yCol = 0.43f;
+					zCol = 0.84f;
+					/*
+					if (yRatio > Settings.WATER_LEVEL-0.0001) {
+						System.out.println("\nyRatio: " + yRatio);
+						System.out.println("yPos: " + yPosition);
+					}*/
+				}
+				// Dirt
+				else if (yRatio > Settings.WATER_LEVEL && yRatio <= Settings.DIRT_LEVEL) {
+					xCol = 0.68f;
+					yCol = 0.54f;
+					zCol = 0.29f;
+				}
+				// Grass
+				else if (yRatio > Settings.DIRT_LEVEL && yRatio <= Settings.GRASS_LEVEL) {
+					xCol = 0.50f;
+					yCol = 0.69f;
+					zCol = 0.25f;
+				}
+				// Rocks
+				else if (yRatio > Settings.GRASS_LEVEL && yRatio <= Settings.ROCK_LEVEL) {
+					xCol = 0.57f;
+					yCol = 0.55f;
+					zCol = 0.52f;
+				}
+				// Snow
+				else {
+					xCol = 0.9f;
+					yCol = 0.9f;
+					zCol = 0.9f;
+				}
+				colorArray[colorOffset++] = xCol;
+				colorArray[colorOffset++] = yCol;
+				colorArray[colorOffset++] = zCol;
+				//colorArray[colorOffset++] = 1.0f;
 			}
 		}
+		
+		//System.out.println("min: " + min);
+		//System.out.println("max: " + max);
 
 		vertexBuffer = BufferUtils.newFloatBuffer(arraySize);
 		BufferUtils.copy(vertexArray, 0, vertexBuffer, arraySize);
 		vertexBuffer.rewind();
 		
-		uvBuffer = BufferUtils.newFloatBuffer(uvArraySize);
-		BufferUtils.copy(uvArray, 0, uvBuffer, uvArraySize);
-		uvBuffer.rewind();
-		
 		normalBuffer = BufferUtils.newFloatBuffer(arraySize);
 		BufferUtils.copy(normalArray, 0, normalBuffer, arraySize);
 		normalBuffer.rewind();
+		
+		colorBuffer = BufferUtils.newFloatBuffer(colorArraySize);
+		BufferUtils.copy(colorArray, 0, colorBuffer, colorArraySize);
+		colorBuffer.rewind();
+		
+		uvBuffer = BufferUtils.newFloatBuffer(uvArraySize);
+		BufferUtils.copy(uvArray, 0, uvBuffer, uvArraySize);
+		uvBuffer.rewind();
 		
 		/*** INDEX ARRAY GENERATION ***/
 		final int numStripsRequired = height;
@@ -138,6 +223,7 @@ public class PlaneGraphic {
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
+		Gdx.gl.glVertexAttribPointer(shader.getColorPointer(), 3, GL20.GL_FLOAT, false, 0, colorBuffer);
 
 		Gdx.gl.glDrawElements(GL20.GL_TRIANGLE_STRIP, indexCount, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
@@ -148,9 +234,10 @@ public class PlaneGraphic {
 		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
 		Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
+		Gdx.gl.glVertexAttribPointer(shader.getColorPointer(), 3, GL20.GL_FLOAT, false, 0, colorBuffer);
 		
 		//Gdx.gl.glLineWidth(5f);
-
-		Gdx.gl.glDrawElements(GL20.GL_LINE_STRIP, indexCount, GL20.GL_UNSIGNED_SHORT, indexBuffer);
+		
+		Gdx.gl.glDrawElements(GL20.GL_LINES, indexCount, GL20.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 }

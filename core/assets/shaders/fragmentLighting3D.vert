@@ -7,6 +7,7 @@ precision mediump float;
 attribute vec3 a_position;
 attribute vec3 a_normal;
 attribute vec2 a_uv;
+attribute vec3 a_color;
 
 uniform mat4 u_modelMatrix;
 uniform mat4 u_viewMatrix;
@@ -20,11 +21,13 @@ varying vec2 v_uv;
 varying vec4 v_normal;
 varying vec4 v_s;
 varying vec4 v_h;
+varying vec3 v_color;
 
 varying float v_distance;
 
 void main()
 {
+	v_color = a_color;
 	vec4 position = vec4(a_position.x, a_position.y, a_position.z, 1.0);
 	position = u_modelMatrix * position;
 
